@@ -1,5 +1,6 @@
 package com.bitmax.digidial.Screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 
 @Composable
 fun OTPVerificationScreen(navController: NavController, phoneNumber: String) {
@@ -91,27 +93,36 @@ fun OTPVerificationScreen(navController: NavController, phoneNumber: String) {
                             VerifyOtpRequest(mobile = "+91 $phoneNumber", otp = otp)
                         )
 
-                        if (response.isSuccessful && response.body()?.success == true) {
-                            successMessage = "✅ OTP Verified! Redirecting..."
-                            // Delay a bit for a smooth UX
-                            //delay(1200)
-                            // ✅ Go to Dashboard and clear backstack (so user can't go back)
-                            withContext(Dispatchers.Main) {
-                                navController.navigate("dashboard") {
-                                    popUpTo("otpverfication/{phoneNumber}") { inclusive = true }
-                                }
-                            }
+                        // ✅ Yeh log hamesha chalega (success ya fail dono me)
+                        Log.d("OTPVerification", "Response code: ${response.code()}")
+                        Log.d("OTPVerification", "Response body: ${response.body()?.toString()}")
 
+                        if (response.isSuccessful && response.body()?.success == true) {
+                            Log.d("OTPVerification", "OTP Verified Successfully")
+                            successMessage = "✅ Login Successful! Redirecting..."
+
+                            delay(2000)
+
+                            Log.d("OTPVerification", "Navigating to homeScreen now")
+
+                            navController.navigate("homeScreen") {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
                         } else {
-                            errorMessage = response.body()?.message ?: "Invalid OTP. Please try again."
+                            Log.d("OTPVerification", "OTP verification failed: ${response.body()?.message}")
+                            errorMessage = response.body()?.message ?: "Invalid OTP"
                         }
                     } catch (e: Exception) {
+                        Log.e("OTPVerification", "Exception: ${e.message}")
                         errorMessage = e.message ?: "An unexpected error occurred."
-                    } finally {
+                    }
+                    finally {
                         isLoading = false
                     }
                 }
-            },
+            }
+            ,
             enabled = otp.length == 6 && !isLoading,
             modifier = Modifier
                 .fillMaxWidth()

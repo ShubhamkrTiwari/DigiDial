@@ -44,8 +44,10 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
         if (otpState is OtpUiState.Success) {
             delay(1500) // 1.5 sec delay for showing "Redirecting..."
             val cleanNumber = mobileNumber.trim()
-            navController.navigate("otpverification/$cleanNumber") {
-                popUpTo("login_screen") { inclusive = true }
+            navController.navigate("otpverification/$cleanNumber"){
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
                 launchSingleTop = true
             }
         }

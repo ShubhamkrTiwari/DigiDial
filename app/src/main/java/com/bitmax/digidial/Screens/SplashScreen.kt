@@ -92,8 +92,33 @@ fun SplashScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+//        Button(
+//            onClick = {navController.navigate("login")},
+//
+//
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 16.dp),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = Color.Blue,
+//                contentColor = Color.White
+//            )
+//        ) {
+//            Text(text = "Log In", modifier = Modifier.padding(vertical = 8.dp))
+//        }
+
         Button(
-            onClick = {navController.navigate("login")},
+            onClick = {
+                navController.navigate("login") {
+                    // Pop up to the start destination of the graph to
+                    // avoid building up a large stack of destinations
+                    // on the back stack as users select items
+                    popUpTo(navController.graph.startDestinationId) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -104,6 +129,7 @@ fun SplashScreen(navController: NavController) {
         ) {
             Text(text = "Log In", modifier = Modifier.padding(vertical = 8.dp))
         }
+
     }
 }
 

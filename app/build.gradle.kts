@@ -1,12 +1,12 @@
 import org.gradle.kotlin.dsl.debugImplementation
 
-plugins {
+  plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
-
     // ✅ Add Parcelize plugin
+
     id("kotlin-parcelize")
 }
 
@@ -74,7 +74,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.0.0")
 
     // Coil for image loading
-    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
@@ -100,4 +100,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
 }

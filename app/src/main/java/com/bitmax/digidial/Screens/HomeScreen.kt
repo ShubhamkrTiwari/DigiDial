@@ -680,8 +680,8 @@ fun AddMemberCircle() {
         Text("Add\nMember", fontSize = 12.sp, color = Color.Gray, lineHeight = 14.sp)
     }
 }
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController())
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HomeScreenPreview() {
+//    HomeScreen(navController = rememberNavController())
+//}

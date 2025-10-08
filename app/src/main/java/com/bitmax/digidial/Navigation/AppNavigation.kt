@@ -85,6 +85,7 @@ fun AppNavigation() {
 
             ContactDetailsScreen(customer = customer, navController)
         }
+
     }
 }
 
