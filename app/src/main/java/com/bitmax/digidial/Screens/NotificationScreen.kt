@@ -10,12 +10,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 // 1) Data class
 data class NotificationItem(
-    val icon: androidx.compose.ui.graphics.vector.ImageVector,
+    val icon: ImageVector,
     val title: String,
     val subtitle: String,
     val section: String,
@@ -46,7 +47,11 @@ fun NotificationCard(notification: NotificationItem) {
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(text = notification.title, style = MaterialTheme.typography.titleMedium)
-                    Text(text = notification.subtitle, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                    Text(
+                        text = notification.subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
                 }
             }
             notification.trailingIcon?.invoke()

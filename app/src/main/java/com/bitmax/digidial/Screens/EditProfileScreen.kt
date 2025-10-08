@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.bitmax.digidial.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,6 +91,7 @@ fun EditProfileScreen(navController: NavController,
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text("Personal Info", fontWeight = FontWeight.Bold, fontSize = 16.sp)
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -138,4 +140,9 @@ fun EditProfileScreen(navController: NavController,
             }
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun EditProfileScreenPreview() {
+    EditProfileScreen(navController = rememberNavController())
 }

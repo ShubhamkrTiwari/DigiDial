@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 // Colors
 private val SurfaceWhite = Color(0xFFFFFFFF)
@@ -43,7 +44,6 @@ fun CallRecordingsScreen(navController: NavController) {
         RecordingItem(3, "New Lead", "20:10, 1:35 AM"),
     )
 
-
     MaterialTheme(
         colorScheme = lightColorScheme(
             primary = PrimaryBlue,
@@ -64,6 +64,7 @@ fun CallRecordingsScreen(navController: NavController) {
 
                 Box(
                     modifier = Modifier
+
                         .fillMaxWidth()
                         .weight(1f)
                         .padding(horizontal = 16.dp)
@@ -272,4 +273,9 @@ private fun NotificationRow(notif: NotificationItem, switchState: Boolean, onSwi
             )
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun CallRecordingScreenPreview() {
+    CallRecordingsScreen(navController = rememberNavController())
 }

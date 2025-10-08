@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -52,9 +53,9 @@ fun SplashScreen(navController: NavController) {
     ) {
         // Logo
         Image(
-            painter = painterResource(id = R.drawable.superone),
+            painter = painterResource(id = R.drawable.digidial_logo),
             contentDescription = "Superfone Logo",
-            modifier = Modifier.height(200.dp)
+            modifier = Modifier.height(300.dp).width(200.dp)
         )
 
         LottieAnimationView(animationRes = R.raw.superfone_lottie)

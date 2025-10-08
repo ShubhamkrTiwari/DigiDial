@@ -25,151 +25,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.bitmax.digidial.R
-
-// ✅ Data model
-data class Customer(
-    val id: Int,
-    val name: String,
-    val phone: String = "N/A",
-    val email: String = "N/A",
-    val lastCall: String,
-    val isNew: Boolean = false,
-    val type: String = "All", // "Lead", "VIP", or "All"
-    val callHistory: List<String> = emptyList()
-)
-
+import com.bitmax.digidial.Models.Customer
+import com.google.gson.Gson
+import java.net.URLEncoder
 
 @Composable
 fun CustomerListScreen(navController: NavController) {
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("All", "Leads", "VIP")
 
-
-    // ✅ Search query state
     var searchQuery by remember { mutableStateOf("") }
 
-    // ✅ Customer list state (mutable for adding new ones)
+    // Replace with your own customers
     var customers by remember {
         mutableStateOf(
             listOf(
-                Customer(
-                    1,
-                    "Michael Johnson",
-                    "9876543210",
-                    "michael@mail.com",
-                    "3 days ago",
-                    callHistory = listOf("Called on 17 Sep", "Called on 14 Sep")
-                ),
-                Customer(
-                    2,
-                    "Sarah Chen",
-                    "9876543211",
-                    "sarah@mail.com",
-                    "Today, 10:30 AM",
-                    isNew = true,
-                    type = "Lead",
-                    callHistory = listOf("Called Today")
-                ),
-                Customer(
-                    3,
-                    "David Lee",
-                    "9876543212",
-                    "david@mail.com",
-                    "2 days ago",
-                    type = "VIP",
-                    callHistory = listOf("Called 2 days ago")
-                ),
-                Customer(
-                    4,
-                    "Emily Davis",
-                    "8967898967",
-                    "emily@gmail.com",
-                    "4 days ago",
-                    type = "Lead",
-                    callHistory = listOf("Called 4 days ago")
-                ),
-                Customer(
-                    1,
-                    "Michael Johnson",
-                    "9876543210",
-                    "michael@mail.com",
-                    "3 days ago",
-                    callHistory = listOf("Called on 17 Sep", "Called on 14 Sep")
-                ),
-                Customer(
-                    2,
-                    "Sarah Chen",
-                    "9876543211",
-                    "sarah@mail.com",
-                    "Today, 10:30 AM",
-                    isNew = true,
-                    type = "Lead",
-                    callHistory = listOf("Called Today")
-                ),
-                Customer(
-                    3,
-                    "David Lee",
-                    "9876543212",
-                    "david@mail.com",
-                    "2 days ago",
-                    type = "VIP",
-                    callHistory = listOf("Called 2 days ago")
-                ),
-                Customer(
-                    4,
-                    "Emily Davis",
-                    "8967898967",
-                    "emily@gmail.com",
-                    "4 days ago",
-                    type = "Lead",
-                    callHistory = listOf("Called 4 days ago")
-                ),
-                Customer(
-                    1,
-                    "Michael Johnson",
-                    "9876543210",
-                    "michael@mail.com",
-                    "3 days ago",
-                    callHistory = listOf("Called on 17 Sep", "Called on 14 Sep")
-                ),
-                Customer(
-                    2,
-                    "Sarah Chen",
-                    "9876543211",
-                    "sarah@mail.com",
-                    "Today, 10:30 AM",
-                    isNew = true,
-                    type = "Lead",
-                    callHistory = listOf("Called Today")
-                ),
-                Customer(
-                    3,
-                    "David Lee",
-                    "9876543212",
-                    "david@mail.com",
-                    "2 days ago",
-                    type = "VIP",
-                    callHistory = listOf("Called 2 days ago")
-                ),
-                Customer(
-                    4,
-                    "Emily Davis",
-                    "8967898967",
-                    "emily@gmail.com",
-                    "4 days ago",
-                    type = "Lead",
-                    callHistory = listOf("Called 4 days ago")
-                )
+                Customer(1, "Michael Johnson", "9876543210", "michael@mail.com", "3 days ago", callHistory = listOf("Called on 17 Sep", "Called on 14 Sep")),
+                Customer(2, "Sarah Chen", "9876543211", "sarah@mail.com", "Today, 10:30 AM", isNew = true, type = "Lead", callHistory = listOf("Called Today")),
+                Customer(3, "David Lee", "9876543212", "david@mail.com", "2 days ago", type = "VIP", callHistory = listOf("Called 2 days ago")),
+                Customer(4, "Emily Davis", "8967898967", "emily@gmail.com", "4 days ago", type = "Lead", callHistory = listOf("Called 4 days ago"))
             )
         )
     }
 
-
-    var selectedCustomer by remember { mutableStateOf<Customer?>(null) }
-    var showAddDialog by remember { mutableStateOf(false) }
-
-    // 🔹 Tab + Search Filter Logic
     val filteredCustomers = customers.filter { customer ->
         val matchesTab = when (selectedTab) {
             1 -> customer.type == "Lead"
@@ -179,7 +59,7 @@ fun CustomerListScreen(navController: NavController) {
         val matchesSearch = customer.name.contains(searchQuery, ignoreCase = true) ||
                 customer.lastCall.contains(searchQuery, ignoreCase = true)
         matchesTab && matchesSearch
-    }.sortedBy { it.name } // Alphabetical order
+    }.sortedBy { it.name }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -188,7 +68,7 @@ fun CustomerListScreen(navController: NavController) {
                 .padding(bottom = 50.dp)
                 .background(Color(0xFFE8F2FF))
         ) {
-            // 🔹 Top Bar
+            // Top Bar + Search
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -204,7 +84,7 @@ fun CustomerListScreen(navController: NavController) {
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
-                            painter = painterResource(id = R.drawable.superone), // App Logo
+                            painter = painterResource(id = R.drawable.superone),
                             contentDescription = "Logo",
                             modifier = Modifier.size(70.dp)
                         )
@@ -218,7 +98,6 @@ fun CustomerListScreen(navController: NavController) {
                     }
                 }
 
-                // 🔹 SearchBar
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
@@ -230,7 +109,6 @@ fun CustomerListScreen(navController: NavController) {
                 )
             }
 
-            // 🔹 Title
             Text(
                 text = "Contacts",
                 fontSize = 28.sp,
@@ -238,7 +116,6 @@ fun CustomerListScreen(navController: NavController) {
                 modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp)
             )
 
-            // 🔹 Scrollable Tabs
             ScrollableTabRow(
                 selectedTabIndex = selectedTab,
                 containerColor = Color.Transparent,
@@ -274,7 +151,6 @@ fun CustomerListScreen(navController: NavController) {
                 }
             }
 
-            // 🔹 Customer List
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -292,147 +168,27 @@ fun CustomerListScreen(navController: NavController) {
                     items(filteredCustomers) { customer ->
                         CustomerItem(
                             customer = customer,
-                            onClick = { selectedCustomer = customer }
+                            onClick = {
+                                val json = URLEncoder.encode(Gson().toJson(customer), "UTF-8")
+                                navController.navigate("contactdetails/$json")
+                            }
                         )
                     }
                 }
             }
-        }
 
-        // 🔹 Floating Add Button
-        FloatingActionButton(
-            onClick = { showAddDialog = true },
-            containerColor = Color(0xFF007BFF),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(40.dp, bottom = 65.dp, end = 20.dp)
-        ) {
-            Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
-        }
-
-        // 🔹 Customer Detail Dialog
-        selectedCustomer?.let { customer ->
-            AlertDialog(
-                onDismissRequest = { selectedCustomer = null },
-                title = {
-                    Text(customer.name, fontWeight = FontWeight.Bold)
-                },
-                text = {
-                    // Wrap content in a Box to control width
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f) // 90% of screen width
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Column {
-                            Text("Phone: ${customer.phone}")
-                            Text("Email: ${customer.email}")
-                            Text("Last Call: ${customer.lastCall}")
-                            Text("Type: ${customer.type}")
-                            if (customer.isNew) Text("Status: New Customer", color = Color(0xFF007BFF))
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text("Call History:", fontWeight = FontWeight.SemiBold)
-                            customer.callHistory.forEach { call ->
-                                Text("- $call", fontSize = 13.sp, color = Color.Gray)
-                            }
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Row {
-                                Button(
-                                    onClick = { /* TODO: Start call */ },
-                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007BFF))
-                                ) { Text("Call", color = Color.White) }
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Button(onClick = { /* TODO: Open chat */ }) { Text("Chat") }
-                            }
-                        }
-                    }
-                },
-                confirmButton = {
-                    TextButton(onClick = { selectedCustomer = null }) {
-                        Text("Close", color = Color(0xFF007BFF))
-                    }
-                }
-            )
-        }
-
-        // 🔹 Add Customer Dialog
-        if (showAddDialog) {
-            var name by remember { mutableStateOf("") }
-            var lastCall by remember { mutableStateOf("") }
-            var type by remember { mutableStateOf("All") }
-            var isNew by remember { mutableStateOf(false) }
-
-            AlertDialog(
-                onDismissRequest = { showAddDialog = false },
-                title = { Text("Add New Customer") },
-                text = {
-                    Column {
-                        OutlinedTextField(
-                            value = name,
-                            onValueChange = { name = it },
-                            label = { Text("Name") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        OutlinedTextField(
-                            value = lastCall,
-                            onValueChange = { lastCall = it },
-                            label = { Text("Last Call") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        // Type selection
-                        Row {
-                            listOf("All", "Lead", "VIP").forEach { option ->
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .padding(end = 12.dp)
-                                        .clickable { type = option }
-                                ) {
-                                    RadioButton(
-                                        selected = type == option,
-                                        onClick = { type = option })
-                                    Text(option)
-                                }
-                            }
-                        }
-
-                        // New customer checkbox
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Checkbox(checked = isNew, onCheckedChange = { isNew = it })
-                            Text("Mark as New")
-                        }
-                    }
-                },
-                confirmButton = {
-                    TextButton(onClick = {
-                        if (name.isNotBlank()) {
-                            val newCustomer = Customer(
-                                id = customers.size + 1,
-                                name = name,
-                                lastCall = lastCall.ifBlank { "N/A" },
-                                isNew = isNew,
-                                type = type
-                            )
-                            customers = customers + newCustomer
-                            showAddDialog = false
-                        }
-                    }) {
-                        Text("Add", color = Color(0xFF007BFF))
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showAddDialog = false }) {
-                        Text("Cancel")
-                    }
-                }
-            )
+            // Floating Add Button
+            FloatingActionButton(
+                onClick = { /* Your add customer logic */ },
+                containerColor = Color(0xFF007BFF),
+                modifier = Modifier
+                    .padding(40.dp, bottom = 65.dp, end = 20.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
+            }
         }
     }
 }
-
 
 @Composable
 fun CustomerItem(customer: Customer, onClick: () -> Unit) {
@@ -496,8 +252,8 @@ fun CustomerItem(customer: Customer, onClick: () -> Unit) {
         }
     }
 }
-
-
-
-
-
+@Preview(showBackground = true)
+@Composable
+fun CustomerListScreenPreview() {
+    CustomerListScreen(navController = rememberNavController())
+}

@@ -4,30 +4,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,9 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.bitmax.digidial.R
 
 @Composable
@@ -46,7 +36,8 @@ fun MyProfileScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color(0xFFF7F8FA))
+            .verticalScroll(rememberScrollState())
     ) {
         // 🔹 Header with Profile + Edit button
         Box(
@@ -102,38 +93,63 @@ fun MyProfileScreen(navController: NavController) {
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         // 🔹 Profile Info Section
-        Column(modifier = Modifier.fillMaxWidth()) {
-            ProfileDetailItem("Full Name", "Rahul Kumar")
-            ProfileDetailItem("Email", "rahul.kumar@example.com")
-            ProfileDetailItem("Phone Number", "+91 98765 43210")
-            ProfileDetailItem("Date of Birth", "12 Aug 1998")
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                ProfileDetailItem("Full Name", "Rahul Kumar")
+                Divider(color = Color.LightGray.copy(alpha = 0.3f), thickness = 1.dp, modifier = Modifier.padding(horizontal = 20.dp))
+                ProfileDetailItem("Email", "rahul.kumar@example.com")
+                Divider(color = Color.LightGray.copy(alpha = 0.3f), thickness = 1.dp, modifier = Modifier.padding(horizontal = 20.dp))
+                ProfileDetailItem("Phone Number", "+91 98765 43210")
+                Divider(color = Color.LightGray.copy(alpha = 0.3f), thickness = 1.dp, modifier = Modifier.padding(horizontal = 20.dp))
+                ProfileDetailItem("Date of Birth", "12 Aug 1998")
+            }
         }
+
 
         Spacer(modifier = Modifier.height(24.dp))
 
         // 🔹 Account Settings
         Text(
             text = "Account Settings",
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black,
+            color = Color.Gray,
             modifier = Modifier.padding(start = 20.dp, bottom = 8.dp)
         )
 
-        ProfileRow(Icons.Default.Lock, "Change Password") {
-            navController.navigate("change_password")
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column {
+                ProfileRow(Icons.Default.Lock, "Change Password") {
+                    navController.navigate("change_password")
+                }
+                Divider(color = Color.LightGray.copy(alpha = 0.3f), thickness = 1.dp, modifier = Modifier.padding(horizontal = 20.dp))
+                ProfileRow(Icons.Default.Settings, "Privacy Settings") {
+                    navController.navigate("privacy_settings")
+                }
+                Divider(color = Color.LightGray.copy(alpha = 0.3f), thickness = 1.dp, modifier = Modifier.padding(horizontal = 20.dp))
+                ProfileRow(Icons.Default.Info, "Help & Support") {
+                    navController.navigate("helpandsupport")
+                }
+            }
         }
-
-        ProfileRow(Icons.Default.Settings, "Privacy Settings") {
-            navController.navigate("privacy_settings")
-        }
-
-        ProfileRow(Icons.Default.Info, "Help & Support") {
-            navController.navigate("helpandsupport") // 👈 navigate to your Help screen
-        }
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
@@ -145,7 +161,6 @@ fun ProfileDetailItem(label: String, value: String) {
         Text(text = label, fontSize = 14.sp, color = Color.Gray)
         Text(text = value, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Black)
     }
-    Divider(color = Color.LightGray.copy(alpha = 0.4f), thickness = 0.8.dp)
 }
 @Composable
 fun ProfileRow(
@@ -180,5 +195,9 @@ fun ProfileRow(
             tint = Color.Gray
         )
     }
-    Divider(color = Color.LightGray.copy(alpha = 0.4f), thickness = 0.8.dp)
+}
+@Preview(showBackground = true)
+@Composable
+fun MyProfileScreenPreview() {
+    MyProfileScreen(navController = rememberNavController())
 }

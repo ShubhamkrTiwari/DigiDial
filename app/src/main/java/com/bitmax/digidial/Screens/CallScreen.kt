@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.SupportAgent
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
@@ -22,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import androidx.compose.material3.ExperimentalMaterial3Api
 
 val PrimaryBlue = Color(0xFF1976D2)
 val LightBlue = Color(0xFFE3F2FD)
@@ -81,19 +84,20 @@ fun CallScreenUI(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBanner() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(PrimaryBlue)
-            .padding(vertical = 60.dp, horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text("Talk to a Live Agent", color = Color.White, fontWeight = FontWeight.SemiBold)
-        Text("Contact Us", color = Color.White, fontWeight = FontWeight.SemiBold)
-    }
+    TopAppBar(
+        title = { Text("Calls", color = Color.White) },
+        actions = {
+            IconButton(onClick = { /* TODO: Contact support */ }) {
+                Icon(Icons.Outlined.SupportAgent, contentDescription = "Contact Support", tint = Color.White)
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = PrimaryBlue
+        )
+    )
 }
 
 @Composable
@@ -317,3 +321,9 @@ fun InAppDialer(onDismiss: () -> Unit) {
         }
     )
 }
+@Preview(showBackground = true)
+@Composable
+fun CompanyDetailsPreview() {
+    CallScreenUI(navController = rememberNavController())
+}
+

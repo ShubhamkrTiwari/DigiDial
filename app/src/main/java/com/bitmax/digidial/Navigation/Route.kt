@@ -11,9 +11,18 @@ sealed class Route(val route: String) {
     object CallRecording :Route("callrecording")
     object Recording :Route("recording")
     object HelpAndSupport :Route("helpandsupport")
-    object DashboardScreen :Route("dashboard")
+    object DashboardScreen :Route(route = "dashboard")
     object MyProfile :Route("myprofile")
     object Notification :Route("notification")
-
+    object  AddTeamMembers: Route("addteammembers")
+    object OTPVerification : Route("otpverification/{phoneNumber}") {
+        fun createRoute(phoneNumber: String) = "otpverification/$phoneNumber"
+    }
+    object GrantPermission: Route("grantpermission")
+    object CompanyDetails : Route("companydetails")
+    object ContactDetailsScreen : Route("contactdetails")
+    object CallDetailsScreen : Route("calldetails")
+    object IncomingScreen : Route("incomingcall")
+    object OutgoingCallScreen : Route("outgoingcall")
 
 }

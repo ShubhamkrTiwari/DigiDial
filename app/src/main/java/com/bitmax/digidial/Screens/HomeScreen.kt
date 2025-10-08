@@ -18,12 +18,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 
 fun HomeScreen(navController: NavController){
@@ -39,42 +40,11 @@ fun HomeScreen(navController: NavController){
                 .background(Color(0xFFE8F2FF))
                 .verticalScroll(scrollState)
         ) {
-            // 🔹 TopBar
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Superfone",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1976D2)
-                )
-                ProfileIcon(navController)
-            }
 
-            // 🔹 Productivity Hub
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .clickable { /* TODO Open productivity hub */ },
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1976D2)),
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("PRODUCTIVITY HUB", color = Color.White, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("NEXT MEETING: Project Sync - 11 AM", color = Color.White, fontSize = 14.sp)
-                    Text("TASKS DUE TODAY: 5", color = Color.White, fontSize = 14.sp)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text("New Emails: 12", color = Color.White, fontSize = 14.sp)
-                }
-            }
+
+            // ✅ New sections
+            TrialAccountSection(navController)
+            MyTeamSection()
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -87,18 +57,6 @@ fun HomeScreen(navController: NavController){
             ) {
                 QuickActionCard(Icons.Default.Call, "Quick Call")
                 QuickActionCard(Icons.Default.NoteAdd, "New Note")
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                QuickActionCard(Icons.Default.Folder, "Project X")
-                QuickActionCard(Icons.Default.BarChart, "Analytics")
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -518,16 +476,212 @@ fun BottomNavigationBar(navController: NavController) {
 }
 
 
+// ----------------- New UI Components -----------------
 @Composable
-fun ProfileIcon(navController: NavController) {
-    Icon(
-        imageVector = Icons.Default.Menu,
-        contentDescription = "Profile",
+fun TrialAccountSection(navController: NavController) {
+    Column(
         modifier = Modifier
-            .size(40.dp)
-            .clickable {
-                navController.navigate("dashboard")
-            },
-        tint = Color.Gray
-    )
+            .fillMaxWidth()
+            .background(Color(0xFF2196F3))
+            .padding(16.dp)
+    ) {
+        // 🔹 Top Row: Menu + Title + Help
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable {
+                    // Navigate to Dashboard screen
+                    navController.navigate("dashboard")
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "Menu",
+                    tint = Color.White,
+                    modifier = Modifier.size(26.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = "DIGIDIAL",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
+            }
+
+            Icon(
+                imageVector = Icons.Default.Help,
+                contentDescription = "Help",
+                tint = Color(0xFFFF9800),
+                modifier = Modifier
+                    .size(26.dp)
+                    .clickable {
+                        // Navigate to Help & Support screen
+                        navController.navigate("helpandsupport")
+                    }
+            )
+        }
+
+        Spacer(Modifier.height(10.dp))
+
+        // 🔹 Trial Account number + actions
+        Text("TRIAL ACCOUNT", color = Color.Yellow, fontSize = 12.sp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "+91 9429693249",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Row {
+                Icon(
+                    imageVector = Icons.Default.ContentCopy,
+                    contentDescription = "Copy",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(22.dp)
+                        .padding(end = 12.dp)
+                )
+                Icon(
+                    imageVector = Icons.Default.Share,
+                    contentDescription = "Share",
+                    tint = Color.White,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        // 🔹 Boost Google Profile Card
+        Card(
+            shape = RoundedCornerShape(10.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = null,
+                    tint = Color(0xFF4285F4),
+                    modifier = Modifier.size(26.dp)
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    "Boost your Google Business Profile",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        // 🔹 Trial Expiry Banner
+        Card(
+            shape = RoundedCornerShape(10.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Trial expires in 3 days", color = Color(0xFFE65100))
+                Text(
+                    "VIEW PLANS",
+                    color = Color(0xFF1976D2),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MyTeamSection() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text("My Team", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+
+        Spacer(Modifier.height(12.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TeamMemberCircle("9", "You", Color(0xFFFFCDD2))
+            TeamMemberCircle("SK", "SHUBHA M", Color(0xFFE1F5FE))
+            TeamMemberCircle("9", "9569786142", Color(0xFFEDE7F6))
+            AddMemberCircle()
+        }
+    }
+}
+
+@Composable
+fun TeamMemberCircle(initials: String, label: String, bgColor: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            modifier = Modifier
+                .size(60.dp)
+                .clip(CircleShape)
+                .background(bgColor),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                initials,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = Color.Black
+            )
+        }
+        Spacer(Modifier.height(6.dp))
+        Text(
+            label,
+            fontSize = 12.sp,
+            color = Color.Gray,
+            maxLines = 1
+        )
+    }
+}
+
+@Composable
+fun AddMemberCircle() {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            modifier = Modifier
+                .size(60.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFE3F2FD)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(Icons.Default.Add, contentDescription = "Add", tint = Color(0xFF1976D2))
+        }
+        Spacer(Modifier.height(6.dp))
+        Text("Add\nMember", fontSize = 12.sp, color = Color.Gray, lineHeight = 14.sp)
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen(navController = rememberNavController())
 }

@@ -13,10 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.bitmax.digidial.R
+
+
 data class FAQ(val question: String, val answer: String, val status: String, val role: String)
 
 
@@ -195,4 +199,9 @@ fun StatusChip(status: String) {
     ) {
         Text(text = status, fontSize = 12.sp, color = textColor, fontWeight = FontWeight.SemiBold)
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun HelpAndSupportScreenPreview() {
+    HelpAndSupportScreen(navController = rememberNavController())
 }

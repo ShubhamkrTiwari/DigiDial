@@ -16,15 +16,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Divider
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,9 +37,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.bitmax.digidial.R
 
 
@@ -45,7 +50,7 @@ fun DashboardScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color(0xFFF0F2F5))
     ) {
         // Profile Header
         Box(
@@ -56,15 +61,31 @@ fun DashboardScreen(navController: NavController) {
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(
-                    painter = painterResource(id = R.drawable.rahul),
-                    contentDescription = "Profile Picture",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                        .background(Color.White)
-                        .border(3.dp, Color.White, CircleShape)
-                )
+                Box {
+                    Image(
+                        painter = painterResource(id = R.drawable.rahul),
+                        contentDescription = "Profile Picture",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                            .border(3.dp, Color.White, CircleShape)
+                    )
+                    IconButton(
+                        onClick = { /* TODO: Handle edit profile picture */ },
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .size(30.dp)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit Profile Picture",
+                            tint = Color(0xFF1976D2)
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "Rahul Kumar",
@@ -80,30 +101,56 @@ fun DashboardScreen(navController: NavController) {
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Dashboard Options
-        Column(modifier = Modifier.fillMaxWidth()) {
-            DashboardRow(Icons.Default.Person, "My Profile") {
-                navController.navigate("myprofile") // ✅ Navigate
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.White)
+            ) {
+                DashboardRow(Icons.Default.Person, "My Profile") {
+                    navController.navigate("myprofile") // ✅ Navigate
+                }
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                DashboardRow(Icons.Default.Settings, "Settings") {
+                    navController.navigate("settings")
+                }
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                DashboardRow(Icons.Default.Notifications, "Notifications") {
+                    navController.navigate("notification")
+                }
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                DashboardRow(Icons.Default.Info, "About Us") {
+                    navController.navigate("aboutus")
+                }
             }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
 
-            DashboardRow(Icons.Default.Settings, "Settings") {
-                navController.navigate("settings")
-            }
-
-            DashboardRow(Icons.Default.Notifications, "Notifications") {
-                navController.navigate("notification")
-            }
-
-            DashboardRow(Icons.Default.Info, "About Us") {
-                navController.navigate("aboutus")
-            }
-
-            DashboardRow(Icons.Default.Close, "Logout") {
-                // Handle logout logic here (e.g., clear session, navigate to login)
-                navController.navigate("login") {
-                    popUpTo("homedashboard") { inclusive = true }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.White)
+            ){
+                DashboardRow(Icons.Default.Close, "Logout", isLogout = true) {
+                    // Handle logout logic here (e.g., clear session, navigate to login)
+                    navController.navigate("login") {
+                        popUpTo("dashboard") { inclusive = true }
+                    }
                 }
             }
         }
@@ -114,34 +161,45 @@ fun DashboardScreen(navController: NavController) {
 fun DashboardRow(
     icon: ImageVector,
     title: String,
-    onClick: () -> Unit // 🔹 add callback
+    isLogout: Boolean = false,
+    onClick: () -> Unit
 ) {
+    val contentColor = if (isLogout) Color.Red else Color(0xFF1976D2)
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() } // 🔹 invoke callback on tap
-            .padding(horizontal = 20.dp, vertical = 14.dp),
+            .clickable { onClick() }
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = title,
-            tint = Color(0xFF1976D2),
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(20.dp))
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(contentColor.copy(alpha = 0.1f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                tint = contentColor,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = title,
             fontSize = 16.sp,
-            color = Color.Black,
-            fontWeight = FontWeight.Medium,
+            color = if (isLogout) contentColor else Color.DarkGray,
+            fontWeight = FontWeight.SemiBold,
             modifier = Modifier.weight(1f)
         )
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowRight,
-            contentDescription = "Go",
-            tint = Color.Gray
-        )
+        if (!isLogout) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = "Go",
+                tint = Color.Gray
+            )
+        }
     }
-    Divider(color = Color.LightGray.copy(alpha = 0.4f), thickness = 0.8.dp)
 }
