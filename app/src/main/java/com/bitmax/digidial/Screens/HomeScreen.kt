@@ -55,8 +55,8 @@ fun HomeScreen(navController: NavController){
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                QuickActionCard(Icons.Default.Call, "Quick Call")
-                QuickActionCard(Icons.Default.NoteAdd, "New Note")
+                QuickActionCard(Icons.Default.Call, "Quick Call") { navController.navigate("call") }
+                QuickActionCard(Icons.Default.NoteAdd, "New Note") { navController.navigate("new_note") }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -72,7 +72,7 @@ fun HomeScreen(navController: NavController){
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 18.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 FileCard("Q3 Report.pdf", Icons.Default.PictureAsPdf)
@@ -83,47 +83,14 @@ fun HomeScreen(navController: NavController){
             Spacer(modifier = Modifier.height(20.dp))
 
             // 🔹 Module Overview
-            Text(
-                text = "Module Overview",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp)
-            )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    ModuleCard(Icons.Default.Person, "CRM", "New Lead: John Smith\nOpportunities: +5")
-                    ModuleCard(Icons.Default.DateRange, "Calendar", "Next: Team Sync - 2PM\n5 events today")
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    ModuleCard(Icons.Default.Message, "Communications", "New Messages: 3")
-                    ModuleCard(Icons.Default.Cloud, "Cloud Storage", "Missed Calls: 1")
-                }
-            }
+
+
 
             Spacer(modifier = Modifier.height(20.dp))
 
             // 🔹 System Health
-            Text(
-                text = "System Health",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp)
-            )
 
-            SystemHealthItem("Battery", 0.86f)   // 86%
-            SystemHealthItem("Storage", 0.75f)   // 75%
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -150,9 +117,11 @@ fun HomeScreen(navController: NavController){
 
 
 // ✅ Quick Action Card
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuickActionCard(icon: ImageVector, label: String) {
+fun QuickActionCard(icon: ImageVector, label: String, onClick: () -> Unit) {
     Card(
+        onClick = onClick,
         modifier = Modifier
             .width(160.dp)
             .height(110.dp),
@@ -206,7 +175,7 @@ fun FileCard(name: String, icon: ImageVector) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp),
+                .padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -680,8 +649,8 @@ fun AddMemberCircle() {
         Text("Add\nMember", fontSize = 12.sp, color = Color.Gray, lineHeight = 14.sp)
     }
 }
-//@Preview(showBackground = true)
-//@Composable
-//fun HomeScreenPreview() {
-//    HomeScreen(navController = rememberNavController())
-//}
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+   HomeScreen(navController = rememberNavController())
+}
