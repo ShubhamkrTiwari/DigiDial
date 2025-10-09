@@ -44,7 +44,7 @@ fun HomeScreen(navController: NavController){
 
             // ✅ New sections
             TrialAccountSection(navController)
-            MyTeamSection()
+            MyTeamSection(navController)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -583,7 +583,7 @@ fun TrialAccountSection(navController: NavController) {
 }
 
 @Composable
-fun MyTeamSection() {
+fun MyTeamSection(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -601,7 +601,7 @@ fun MyTeamSection() {
             TeamMemberCircle("9", "You", Color(0xFFFFCDD2))
             TeamMemberCircle("SK", "SHUBHA M", Color(0xFFE1F5FE))
             TeamMemberCircle("9", "9569786142", Color(0xFFEDE7F6))
-            AddMemberCircle()
+            AddMemberCircle { navController.navigate("add_team_member") }
         }
     }
 }
@@ -634,8 +634,10 @@ fun TeamMemberCircle(initials: String, label: String, bgColor: Color) {
 }
 
 @Composable
-fun AddMemberCircle() {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun AddMemberCircle(onClick: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Box(
             modifier = Modifier
                 .size(60.dp)
@@ -646,7 +648,13 @@ fun AddMemberCircle() {
             Icon(Icons.Default.Add, contentDescription = "Add", tint = Color(0xFF1976D2))
         }
         Spacer(Modifier.height(6.dp))
-        Text("Add\nMember", fontSize = 12.sp, color = Color.Gray, lineHeight = 14.sp)
+        Text(
+            "Add\nMember",
+            fontSize = 12.sp,
+            color = Color.Gray,
+            lineHeight = 14.sp,
+            modifier = Modifier.clickable(onClick = onClick)
+        )
     }
 }
 @Preview(showBackground = true)

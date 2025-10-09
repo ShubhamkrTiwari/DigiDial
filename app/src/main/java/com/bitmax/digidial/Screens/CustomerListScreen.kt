@@ -84,13 +84,13 @@ fun CustomerListScreen(navController: NavController) {
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
-                            painter = painterResource(id = R.drawable.superone),
+                            painter = painterResource(id = R.drawable.digidial_logo),
                             contentDescription = "Logo",
                             modifier = Modifier.size(70.dp)
                         )
                         Spacer(modifier = Modifier.width(45.dp))
                         Text(
-                            text = "Superfone",
+                            text = "DigiDial",
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
                             color = Color.White
