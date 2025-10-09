@@ -20,6 +20,7 @@ import com.bitmax.digidial.Screens.HelpAndSupportScreen
 import com.bitmax.digidial.Screens.HomeScreen
 import com.bitmax.digidial.Screens.Login
 import com.bitmax.digidial.Screens.MyProfileScreen
+import com.bitmax.digidial.Screens.NewNoteScreen
 import com.bitmax.digidial.Screens.OTPVerificationScreen
 import com.bitmax.digidial.Screens.OutgoingCallScreen
 import com.bitmax.digidial.Screens.RecordingScreen
@@ -47,6 +48,7 @@ fun AppNavigation() {
         composable("helpandsupport") { HelpAndSupportScreen(navController) }
         composable("dashboard") { DashboardScreen(navController) }
         composable("myprofile") { MyProfileScreen(navController) }
+        composable("new_note") { NewNoteScreen(navController) }
         //composable("notification"){ NotificationScreen(navController) }
         composable("addteammembers") { AddTeamMembersScreen(navController) }
         composable("companydetails") { CompanyDetailsScreen(navController) }
