@@ -36,6 +36,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.bitmax.digidial.Navigation.Route
 import com.bitmax.digidial.R
@@ -75,44 +76,14 @@ fun SplashScreen(navController: NavController) {
             fontSize = 16.sp,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(30.dp))
-        // Buttons
-        Button(
-            onClick = {navController.navigate("signup")},
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color.Blue
-            )
-        ) {
-            Text(text = "Get Started", modifier = Modifier.padding(vertical = 8.dp))
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        // Spacer to push the button to the bottom
+        Spacer(modifier = Modifier.weight(1f))
 
-//        Button(
-//            onClick = {navController.navigate("login")},
-//
-//
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 16.dp),
-//            colors = ButtonDefaults.buttonColors(
-//                containerColor = Color.Blue,
-//                contentColor = Color.White
-//            )
-//        ) {
-//            Text(text = "Log In", modifier = Modifier.padding(vertical = 8.dp))
-//        }
-
+        // Log In Button
         Button(
             onClick = {
                 navController.navigate("login") {
-                    // Pop up to the start destination of the graph to
-                    // avoid building up a large stack of destinations
-                    // on the back stack as users select items
                     popUpTo(navController.graph.startDestinationId) {
                         inclusive = true
                     }
@@ -121,21 +92,28 @@ fun SplashScreen(navController: NavController) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .height(56.dp),
+            shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Blue,
-                contentColor = Color.White
+                containerColor = Color.White,
+                contentColor = Color(0xFF2196F3)
             )
         ) {
-            Text(text = "Log In", modifier = Modifier.padding(vertical = 8.dp))
+            Text(
+                text = "Log In",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
 
+        // Space below the button
+        Spacer(modifier = Modifier.height(48.dp))
     }
 }
 
 @Composable
 fun LottieAnimationView(
-    animationRes: Int,                // raw resource (res/raw/...)
+    animationRes: Int,                // raw resource (res/...)
     modifier: Modifier = Modifier,
     iterations: Int = LottieConstants.IterateForever // loop animation
 ) {
@@ -151,4 +129,9 @@ fun LottieAnimationView(
         progress = { progress },
         modifier = modifier.size(190.dp).clip(RoundedCornerShape(15.dp))
     )
+}
+@Preview(showBackground = true)
+@Composable
+fun SplashScreenPreview() {
+    SplashScreen(navController = NavController(LocalContext.current))
 }
