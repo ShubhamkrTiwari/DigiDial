@@ -92,6 +92,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     implementation(libs.firebase.appdistribution.gradle)
 
+    // websocket
+    implementation("org.java-websocket:Java-WebSocket:1.5.4")
+    // opus
+    implementation("club.minnced:opus-java:1.1.1")
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
