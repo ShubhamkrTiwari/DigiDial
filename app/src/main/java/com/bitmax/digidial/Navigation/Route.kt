@@ -11,7 +11,7 @@ sealed class Route(val route: String) {
     object CallRecording :Route("callrecording")
     object Recording :Route("recording")
     object HelpAndSupport :Route("helpandsupport")
-    object DashboardScreen :Route(route = "dashboard")
+    object OwnerDashboardScreen :Route(route = "dashboard")
     object MyProfile :Route("myprofile")
     object Notification :Route("notification")
     object  AddTeamMembers: Route("addteammembers")
@@ -24,5 +24,9 @@ sealed class Route(val route: String) {
     object CallDetailsScreen : Route("calldetails")
     object IncomingScreen : Route("incomingcall")
     object OutgoingCallScreen : Route("outgoingcall")
+    object SwitchAccountScreen : Route("switch_account")
+    object AgentDashboardScreen : Route("agentdashboard")
+    object ViewPlanScreen : Route("viewplan")
+
 
 }

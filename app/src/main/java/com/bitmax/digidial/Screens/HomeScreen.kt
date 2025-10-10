@@ -2,6 +2,7 @@ package com.bitmax.digidial.Screens
 
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,111 +11,206 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Business
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.bitmax.digidial.Navigation.Route
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
-fun HomeScreen(navController: NavController){
+fun HomeScreen(navController: NavController, phoneNumber: String) {
     val scrollState = rememberScrollState()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-    Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(Color(0xFFE8F2FF))
-                .verticalScroll(scrollState)
-        ) {
-
-
-            // ✅ New sections
-            TrialAccountSection(navController)
-            MyTeamSection()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 🔹 Quick Actions
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier.background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color(0xFFD8EAFE), Color.White)
+                    )
+                )
             ) {
-                QuickActionCard(Icons.Default.Call, "Quick Call") { navController.navigate("call") }
-                QuickActionCard(Icons.Default.NoteAdd, "New Note") { navController.navigate("new_note") }
+                Spacer(Modifier.height(24.dp))
+                Text(
+                    "Switch Role",
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    RoleAvatar(
+                        icon = Icons.Outlined.Business,
+                        label = "Owner",
+                        isSelected = currentRoute == Route.OwnerDashboardScreen.route,
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            navController.navigate(Route.OwnerDashboardScreen.route)
+                        }
+                    )
+
+                    RoleAvatar(
+                        icon = Icons.Outlined.Person,
+                        label = "Agent",
+                        isSelected = currentRoute == Route.AgentDashboardScreen.route,
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            navController.navigate(Route.AgentDashboardScreen.route)
+                        }
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 🔹 Recent Files
-            Text(
-                text = "Recent Files",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
-            )
-
-            Row(
+        }
+    ) {
+        Scaffold(
+            bottomBar = { BottomNavigationBar(navController) }
+        ) { innerPadding ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 18.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Color(0xFFE8F5FF), Color.White)
+                        )
+                    )
+                    .verticalScroll(scrollState)
             ) {
-                FileCard("Q3 Report.pdf", Icons.Default.PictureAsPdf)
-                FileCard("Meeting_Notes.docx", Icons.Default.Description)
-                FileCard("Client_Proposal", Icons.Default.InsertDriveFile)
+                // Pass a lambda to open the drawer
+                TrialAccountSection(
+                    navController = navController,
+                    phoneNumber = phoneNumber,
+                    onMenuClick = {
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    }
+                )
+                MyTeamSection(navController)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // 🔹 Quick Actions
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    QuickActionCard(Icons.Default.Call, "Quick Call") { navController.navigate("call") }
+                    QuickActionCard(Icons.Default.NoteAdd, "New Note") { navController.navigate("new_note") }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // 🔹 Recent Files
+                Text(
+                    text = "Recent Files",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    FileCard("Reports", Icons.Default.PictureAsPdf) { navController.navigate("reports") }
+                    FileCard("Meeting Notes", Icons.Default.Description) { navController.navigate("meeting_notes") }
+                    FileCard("Client Proposal", Icons.Default.InsertDriveFile) { navController.navigate("client_proposal") }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // 🔹 Daily Digest
+                Text("DAILY DIGEST", fontWeight = FontWeight.Bold, fontSize = 16.sp, modifier = Modifier.padding(16.dp, 20.dp, 16.dp, 8.dp))
+
+                DigestCard(Icons.Default.BarChart, "Activity: 125% of goal")
+                DigestCard(Icons.Default.Star, "Top Contact: Sarah Chen", "(5 interactions)", Icons.Default.Cloud)
+                DigestCard(Icons.Default.Star, "Top Contact: Sarh 3h 30m", "(interactions)", Icons.Default.AccessTime)
+
+                // 🔹 Smart Suggestions
+                Text("SMART SUGGESTIONS", fontWeight = FontWeight.Bold, fontSize = 16.sp, modifier = Modifier.padding(16.dp, 20.dp, 16.dp, 8.dp))
+                SuggestionCard("David Chen", "Tech Solutions") { /* TODO Call action */ }
+
+                AppFooter() // 👈 Footer
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 🔹 Module Overview
-
-
-
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 🔹 System Health
-
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // 🔹 Daily Digest
-            Text("DAILY DIGEST", fontWeight = FontWeight.Bold, fontSize = 16.sp, modifier = Modifier.padding(16.dp, 20.dp, 16.dp, 8.dp))
-
-            DigestCard(Icons.Default.BarChart, "Activity: 125% of goal")
-            DigestCard(Icons.Default.Star, "Top Contact: Sarah Chen", "(5 interactions)", Icons.Default.Cloud)
-            DigestCard(Icons.Default.Star, "Top Contact: Sarh 3h 30m", "(interactions)", Icons.Default.AccessTime)
-
-
-
-            // 🔹 Smart Suggestions
-            Text("SMART SUGGESTIONS", fontWeight = FontWeight.Bold, fontSize = 16.sp, modifier = Modifier.padding(16.dp, 20.dp, 16.dp, 8.dp))
-            SuggestionCard("David Chen", "Tech Solutions") { /* TODO Call action */ }
-
-
-            AppFooter() // 👈 Footer
         }
     }
 }
 
+@Composable
+fun RoleAvatar(icon: ImageVector, label: String, isSelected: Boolean, onClick: () -> Unit) {
+    val selectedColor = MaterialTheme.colorScheme.primary
+    val unselectedColor = Color.Gray
 
-
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
+            .padding(12.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(80.dp)
+                .clip(CircleShape)
+                .background(if (isSelected) selectedColor.copy(alpha = 0.15f) else Color.Black.copy(alpha = 0.05f))
+                .border(
+                    width = if (isSelected) 2.dp else 1.dp,
+                    color = if (isSelected) selectedColor else Color.Gray.copy(alpha = 0.3f),
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                modifier = Modifier.size(40.dp),
+                tint = if (isSelected) selectedColor else unselectedColor
+            )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = label,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+            color = if (isSelected) selectedColor else unselectedColor,
+            fontSize = 14.sp
+        )
+    }
+}
 
 // ✅ Quick Action Card
 @OptIn(ExperimentalMaterial3Api::class)
@@ -160,11 +256,12 @@ fun QuickActionCard(icon: ImageVector, label: String, onClick: () -> Unit) {
     }
 }
 
-
 // ✅ File Card
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FileCard(name: String, icon: ImageVector) {
+fun FileCard(name: String, icon: ImageVector, onClick: (() -> Unit)? = null) {
     Card(
+        onClick = { onClick?.invoke() },
         modifier = Modifier
             .width(110.dp)
             .height(95.dp),
@@ -367,7 +464,7 @@ fun AppFooter() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "© 2024 Superfone Inc.",
+                text = "© 2024 Digidial Inc.",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
@@ -435,19 +532,14 @@ fun BottomNavigationBar(navController: NavController) {
             selected = false,
             onClick = {navController.navigate("callrecording")}
         )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Settings, contentDescription = "More") },
-            label = { Text("More") },
-            selected = false,
-            onClick = {}
-        )
+
     }
 }
 
 
 // ----------------- New UI Components -----------------
 @Composable
-fun TrialAccountSection(navController: NavController) {
+fun TrialAccountSection(navController: NavController, phoneNumber: String, onMenuClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -460,27 +552,24 @@ fun TrialAccountSection(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable {
-                    // Navigate to Dashboard screen
-                    navController.navigate("dashboard")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable(onClick = onMenuClick)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Menu",
+                        tint = Color.White,
+                        modifier = Modifier.size(26.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "DIGIDIAL",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        color = Color.White
+                    )
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Menu",
-                    tint = Color.White,
-                    modifier = Modifier.size(26.dp)
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = "DIGIDIAL",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    color = Color.White
-                )
-            }
 
             Icon(
                 imageVector = Icons.Default.Help,
@@ -505,7 +594,7 @@ fun TrialAccountSection(navController: NavController) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "+91 9429693249",
+                "+91 $phoneNumber",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -573,9 +662,10 @@ fun TrialAccountSection(navController: NavController) {
             ) {
                 Text("Trial expires in 3 days", color = Color(0xFFE65100))
                 Text(
-                    "VIEW PLANS",
+                    text = "VIEW PLANS",
                     color = Color(0xFF1976D2),
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable { navController.navigate(Route.ViewPlanScreen.route) }
                 )
             }
         }
@@ -583,7 +673,11 @@ fun TrialAccountSection(navController: NavController) {
 }
 
 @Composable
-fun MyTeamSection() {
+fun MyTeamSection(navController: NavController) {
+    val context = LocalContext.current
+    val memberRepository = remember { TeamMemberRepository(context) }
+    val teamMembers by remember(navController.currentBackStackEntry) { mutableStateOf(memberRepository.loadMembers()) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -598,10 +692,11 @@ fun MyTeamSection() {
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TeamMemberCircle("9", "You", Color(0xFFFFCDD2))
-            TeamMemberCircle("SK", "SHUBHA M", Color(0xFFE1F5FE))
-            TeamMemberCircle("9", "9569786142", Color(0xFFEDE7F6))
-            AddMemberCircle()
+            TeamMemberCircle(initials = "You", label = "You", bgColor = Color(0xFFFFCDD2))
+            teamMembers.forEach {
+                TeamMemberCircle(initials = it.name.take(2).uppercase(), label = it.name, bgColor = Color(0xFFE1F5FE))
+            }
+            AddMemberCircle { navController.navigate("addteammembers") }
         }
     }
 }
@@ -634,8 +729,11 @@ fun TeamMemberCircle(initials: String, label: String, bgColor: Color) {
 }
 
 @Composable
-fun AddMemberCircle() {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun AddMemberCircle(onClick: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable(onClick = onClick)
+    ) {
         Box(
             modifier = Modifier
                 .size(60.dp)
@@ -646,11 +744,16 @@ fun AddMemberCircle() {
             Icon(Icons.Default.Add, contentDescription = "Add", tint = Color(0xFF1976D2))
         }
         Spacer(Modifier.height(6.dp))
-        Text("Add\nMember", fontSize = 12.sp, color = Color.Gray, lineHeight = 14.sp)
+        Text(
+            "Add\nMember",
+            fontSize = 12.sp,
+            color = Color.Gray,
+            lineHeight = 14.sp
+        )
     }
 }
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-   HomeScreen(navController = rememberNavController())
+   HomeScreen(navController = rememberNavController(), phoneNumber = "1234567890")
 }

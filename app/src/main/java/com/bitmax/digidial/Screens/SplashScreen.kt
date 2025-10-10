@@ -3,25 +3,13 @@ package com.bitmax.digidial.Screens
 import androidx.annotation.RawRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,39 +17,48 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.bitmax.digidial.Navigation.Route
+import androidx.navigation.compose.rememberNavController
+import com.airbnb.lottie.compose.*
 import com.bitmax.digidial.R
+import com.bitmax.digidial.Navigation.Route
+import kotlinx.coroutines.delay
 
-//@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun SplashScreen(navController: NavController) {
 
+    // ⏳ Navigate to SwitchAccountScreen after 3 seconds
+    LaunchedEffect(Unit) {
+        delay(3000)
+        navController.navigate("switch_account")
+    }
+
+    // 🎨 UI
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF2196F3))
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        // Logo
+        // 🟦 Logo
         Image(
             painter = painterResource(id = R.drawable.digidial_logo),
-            contentDescription = "Superfone Logo",
-            modifier = Modifier.height(300.dp).width(200.dp)
+            contentDescription = "DigiDial Logo",
+            modifier = Modifier
+                .height(300.dp)
+                .width(200.dp)
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // 🌀 Lottie Animation
         LottieAnimationView(animationRes = R.raw.superfone_lottie)
+
         Spacer(modifier = Modifier.height(12.dp))
-        // Tagline
+
+        // ✨ Tagline
         Text(
             text = "Your Business, Your Phone",
             color = Color.White,
@@ -76,62 +73,32 @@ fun SplashScreen(navController: NavController) {
             fontSize = 16.sp,
             textAlign = TextAlign.Center
         )
-
-        // Spacer to push the button to the bottom
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Log In Button
-        Button(
-            onClick = {
-                navController.navigate("login") {
-                    popUpTo(navController.graph.startDestinationId) {
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color(0xFF2196F3)
-            )
-        ) {
-            Text(
-                text = "Log In",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        // Space below the button
-        Spacer(modifier = Modifier.height(48.dp))
     }
 }
 
 @Composable
 fun LottieAnimationView(
-    animationRes: Int,                // raw resource (res/...)
+    @RawRes animationRes: Int,
     modifier: Modifier = Modifier,
-    iterations: Int = LottieConstants.IterateForever // loop animation
+    iterations: Int = LottieConstants.IterateForever
 ) {
-    // load the animation
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animationRes))
     val progress by animateLottieCompositionAsState(
         composition = composition,
         iterations = iterations
     )
-    // show the animation
+
     LottieAnimation(
         composition = composition,
         progress = { progress },
-        modifier = modifier.size(190.dp).clip(RoundedCornerShape(15.dp))
+        modifier = modifier
+            .size(190.dp)
+            .clip(RoundedCornerShape(15.dp))
     )
 }
+
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen(navController = NavController(LocalContext.current))
+    SplashScreen(navController = rememberNavController())
 }
