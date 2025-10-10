@@ -9,9 +9,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.bitmax.digidial.Models.Customer
 import com.bitmax.digidial.Screens.AddTeamMembersScreen
+import com.bitmax.digidial.Screens.AgentDashboardScreen
 import com.bitmax.digidial.Screens.CallRecordingsScreen
 import com.bitmax.digidial.Screens.CallScreenUI
-import com.bitmax.digidial.Screens.CompanyDetailsScreen
+import com.bitmax.digidial.Screens.ClientProposalScreen
 import com.bitmax.digidial.Screens.ContactDetailsScreen
 import com.bitmax.digidial.Screens.CustomerListScreen
 import com.bitmax.digidial.Screens.EditProfileScreen
@@ -19,13 +20,17 @@ import com.bitmax.digidial.Screens.GrantPermissionScreen
 import com.bitmax.digidial.Screens.HelpAndSupportScreen
 import com.bitmax.digidial.Screens.HomeScreen
 import com.bitmax.digidial.Screens.Login
+import com.bitmax.digidial.Screens.MeetingNotesScreen
 import com.bitmax.digidial.Screens.MyProfileScreen
 import com.bitmax.digidial.Screens.NewNoteScreen
 import com.bitmax.digidial.Screens.OTPVerificationScreen
 import com.bitmax.digidial.Screens.OutgoingCallScreen
 import com.bitmax.digidial.Screens.RecordingScreen
+import com.bitmax.digidial.Screens.ReportsScreen
 import com.bitmax.digidial.Screens.SplashScreen
-import com.bitmax.digidial.Screens.DashboardScreen
+import com.bitmax.digidial.Screens.OwnerDashboardScreen
+import com.bitmax.digidial.Screens.SwitchAccountScreen
+import com.bitmax.digidial.Screens.ViewPlanScreen
 import com.google.gson.Gson
 import java.net.URLDecoder
 
@@ -40,18 +45,32 @@ fun AppNavigation() {
         composable("Splash") { SplashScreen(navController) }
         composable("login") { Login(navController) }
         composable("editprofile") { EditProfileScreen(navController) }
-        composable("homeScreen") { HomeScreen(navController) }
+        composable(
+            route = "homeScreen/{phoneNumber}",
+            arguments = listOf(navArgument("phoneNumber") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val phoneNumber = backStackEntry.arguments?.getString("phoneNumber") ?: ""
+            HomeScreen(navController, phoneNumber)
+        }
         composable("customerlist") { CustomerListScreen(navController) }
         composable("call") { CallScreenUI(navController) }
         composable("callrecording") { CallRecordingsScreen(navController) }
         composable("recording") { RecordingScreen(navController) }
         composable("helpandsupport") { HelpAndSupportScreen(navController) }
-        composable("dashboard") { DashboardScreen(navController) }
+        composable("dashboard") { OwnerDashboardScreen(navController) }
         composable("myprofile") { MyProfileScreen(navController) }
         composable("new_note") { NewNoteScreen(navController) }
+        composable("meeting_notes") { MeetingNotesScreen(navController) }
+        composable("reports") { ReportsScreen(navController) }
+        composable("client_proposal") { ClientProposalScreen(navController) }
+        composable("switch_account") { SwitchAccountScreen(navController)}
+        composable("agentdashboard") { AgentDashboardScreen(navController) }
+        composable("viewplan") { ViewPlanScreen(navController) }
+
+
+
         //composable("notification"){ NotificationScreen(navController) }
         composable("addteammembers") { AddTeamMembersScreen(navController) }
-        composable("companydetails") { CompanyDetailsScreen(navController) }
         composable(
             route = "otpverification/{phoneNumber}",
             arguments = listOf(navArgument("phoneNumber") { type = NavType.StringType })
@@ -90,4 +109,3 @@ fun AppNavigation() {
 
     }
 }
-

@@ -34,7 +34,7 @@ import java.net.URLEncoder
 @Composable
 fun CustomerListScreen(navController: NavController) {
     var selectedTab by remember { mutableStateOf(0) }
-    val tabs = listOf("All", "Leads", "VIP")
+    val tabs = listOf("All", "Leads")
 
     var searchQuery by remember { mutableStateOf("") }
 
@@ -44,7 +44,6 @@ fun CustomerListScreen(navController: NavController) {
             listOf(
                 Customer(1, "Michael Johnson", "9876543210", "michael@mail.com", "3 days ago", callHistory = listOf("Called on 17 Sep", "Called on 14 Sep")),
                 Customer(2, "Sarah Chen", "9876543211", "sarah@mail.com", "Today, 10:30 AM", isNew = true, type = "Lead", callHistory = listOf("Called Today")),
-                Customer(3, "David Lee", "9876543212", "david@mail.com", "2 days ago", type = "VIP", callHistory = listOf("Called 2 days ago")),
                 Customer(4, "Emily Davis", "8967898967", "emily@gmail.com", "4 days ago", type = "Lead", callHistory = listOf("Called 4 days ago"))
             )
         )
@@ -53,7 +52,6 @@ fun CustomerListScreen(navController: NavController) {
     val filteredCustomers = customers.filter { customer ->
         val matchesTab = when (selectedTab) {
             1 -> customer.type == "Lead"
-            2 -> customer.type == "VIP"
             else -> true
         }
         val matchesSearch = customer.name.contains(searchQuery, ignoreCase = true) ||
