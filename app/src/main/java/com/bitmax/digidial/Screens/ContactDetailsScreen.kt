@@ -173,8 +173,4 @@ fun ContactInfoRow(icon: androidx.compose.ui.graphics.vector.ImageVector, label:
 fun HistoryItem(text: String) {
     Text(text, fontSize = 14.sp, color = Color(0xFF2D2D2D), modifier = Modifier.padding(vertical = 10.dp))
 }
-@Preview(showBackground = true)
-@Composable
-fun ContactDetailsScreenPreview() {
-    CompanyDetailsScreen(navController = rememberNavController())
-}
+

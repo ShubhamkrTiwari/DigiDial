@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">DigiDial</string>
+    <string name="title_activity_view_plan">ViewPlan</string>
+    <string name="title_activity_meeting_notes">MeetingNotes</string>
+    <string name="title_activity_reports">Reports</string>
+    <string name="title_activity_client_proposal">ClientProposal</string>
 </resources>

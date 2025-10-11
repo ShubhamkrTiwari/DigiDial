@@ -149,7 +149,7 @@ private fun HeaderBar() {
                     Icon(Icons.Default.Call, contentDescription = "App", tint = Color.White)
                 }
                 Spacer(modifier = Modifier.width(10.dp))
-                Text("Superfone", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+                Text("DigiDial", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
             }
 
             Spacer(modifier = Modifier.weight(1f))
