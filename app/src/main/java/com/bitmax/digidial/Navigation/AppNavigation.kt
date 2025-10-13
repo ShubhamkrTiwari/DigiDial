@@ -1,13 +1,13 @@
 package com.bitmax.digidial.Navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.bitmax.digidial.Models.Customer
+import com.bitmax.digidial.Models.Lead
 import com.bitmax.digidial.Screens.AddTeamMembersScreen
 import com.bitmax.digidial.Screens.AgentDashboardScreen
 import com.bitmax.digidial.Screens.CallRecordingsScreen
@@ -32,6 +32,7 @@ import com.bitmax.digidial.Screens.OwnerDashboardScreen
 import com.bitmax.digidial.Screens.SwitchAccountScreen
 import com.bitmax.digidial.Screens.ViewPlanScreen
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import java.net.URLDecoder
 
 
@@ -52,7 +53,6 @@ fun AppNavigation() {
             val phoneNumber = backStackEntry.arguments?.getString("phoneNumber") ?: ""
             HomeScreen(navController, phoneNumber)
         }
-        composable("customerlist") { CustomerListScreen(navController) }
         composable("call") { CallScreenUI(navController) }
         composable("callrecording") { CallRecordingsScreen(navController) }
         composable("recording") { RecordingScreen(navController) }
@@ -102,8 +102,15 @@ fun AppNavigation() {
         composable("contactDetails/{customerJson}") { backStackEntry ->
             val json = backStackEntry.arguments?.getString("customerJson")
             val decoded = URLDecoder.decode(json ?: "", "UTF-8")
-            val customer = Gson().fromJson(decoded, Customer::class.java)
+            val gson = Gson()
+            val jsonObject = gson.fromJson(decoded, JsonObject::class.java)
 
+            val customer = if (jsonObject.has("company")) {
+                gson.fromJson(jsonObject, Customer::class.java)
+            } else {
+                val lead = gson.fromJson(jsonObject, Lead::class.java)
+                Customer(id = lead.id.hashCode(), name = lead.name, company = "", email = lead.email, phone = lead.phone, lastCall = lead.lastCall)
+            }
             ContactDetailsScreen(customer = customer, navController)
         }
 

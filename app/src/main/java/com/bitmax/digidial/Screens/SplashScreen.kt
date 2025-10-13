@@ -33,7 +33,7 @@ fun SplashScreen(navController: NavController) {
         navController.navigate("switch_account")
     }
 
-    // 🎨 UI
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,7 +53,7 @@ fun SplashScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 🌀 Lottie Animation
+
         LottieAnimationView(animationRes = R.raw.superfone_lottie)
 
         Spacer(modifier = Modifier.height(12.dp))

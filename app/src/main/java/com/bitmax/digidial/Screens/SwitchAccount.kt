@@ -90,7 +90,8 @@ fun SwitchAccountScreen(
                 )
 
                 Text(
-                    text = "Empowering Businesses with Smart Digital Solutions",
+                    text = "Empowering Businesses" +
+                            " with Smart Digital Solutions",
                     fontSize = 14.sp,
                     color = Color(0xFF0277BD),
                     textAlign = TextAlign.Center,

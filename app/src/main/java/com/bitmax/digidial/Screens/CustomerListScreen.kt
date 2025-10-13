@@ -3,18 +3,38 @@ package com.bitmax.digidial.Screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,39 +44,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitmax.digidial.R
-import com.bitmax.digidial.Models.Customer
+import com.bitmax.digidial.Models.Lead
+import com.bitmax.digidial.ViewModel.LeadViewModel
 import com.google.gson.Gson
 import java.net.URLEncoder
 
 @Composable
-fun CustomerListScreen(navController: NavController) {
+fun CustomerListScreen(navController: NavController, leadViewModel: LeadViewModel = viewModel()) {
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("All", "Leads")
 
     var searchQuery by remember { mutableStateOf("") }
 
-    // Replace with your own customers
-    var customers by remember {
-        mutableStateOf(
-            listOf(
-                Customer(1, "Michael Johnson", "9876543210", "michael@mail.com", "3 days ago", callHistory = listOf("Called on 17 Sep", "Called on 14 Sep")),
-                Customer(2, "Sarah Chen", "9876543211", "sarah@mail.com", "Today, 10:30 AM", isNew = true, type = "Lead", callHistory = listOf("Called Today")),
-                Customer(4, "Emily Davis", "8967898967", "emily@gmail.com", "4 days ago", type = "Lead", callHistory = listOf("Called 4 days ago"))
-            )
-        )
+    LaunchedEffect(Unit) {
+        leadViewModel.fetchLeads()
     }
 
-    val filteredCustomers = customers.filter { customer ->
-        val matchesTab = when (selectedTab) {
-            1 -> customer.type == "Lead"
-            else -> true
-        }
-        val matchesSearch = customer.name.contains(searchQuery, ignoreCase = true) ||
-                customer.lastCall.contains(searchQuery, ignoreCase = true)
-        matchesTab && matchesSearch
+    val leads = leadViewModel.leads.value
+    val errorMessage = leadViewModel.errorMessage.value
+
+    val filteredLeads = leads.filter {
+        it.name.contains(searchQuery, ignoreCase = true) ||
+                it.lastCall.contains(searchQuery, ignoreCase = true)
     }.sortedBy { it.name }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -66,7 +79,6 @@ fun CustomerListScreen(navController: NavController) {
                 .padding(bottom = 50.dp)
                 .background(Color(0xFFE8F2FF))
         ) {
-            // Top Bar + Search
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -149,52 +161,67 @@ fun CustomerListScreen(navController: NavController) {
                 }
             }
 
+            if (errorMessage.isNotEmpty()) {
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
-                if (filteredCustomers.isEmpty()) {
+                if (selectedTab == 1) {
+                    if (filteredLeads.isEmpty()) {
+                        item {
+                            Text(
+                                text = "No leads found",
+                                modifier = Modifier.padding(16.dp),
+                                color = Color.Gray
+                            )
+                        }
+                    } else {
+                        items(filteredLeads) { lead ->
+                            LeadItem(lead = lead) {
+                                val json = URLEncoder.encode(Gson().toJson(lead), "UTF-8")
+                                navController.navigate("contactdetails/$json")
+                            }
+                        }
+                    }
+                } else {
                     item {
                         Text(
-                            text = "No customers found",
+                            text = "'All' tab is currently not implemented",
                             modifier = Modifier.padding(16.dp),
                             color = Color.Gray
                         )
                     }
-                } else {
-                    items(filteredCustomers) { customer ->
-                        CustomerItem(
-                            customer = customer,
-                            onClick = {
-                                val json = URLEncoder.encode(Gson().toJson(customer), "UTF-8")
-                                navController.navigate("contactdetails/$json")
-                            }
-                        )
-                    }
                 }
             }
+        }
 
-            // Floating Add Button
-            FloatingActionButton(
-                onClick = { /* Your add customer logic */ },
-                containerColor = Color(0xFF007BFF),
-                modifier = Modifier
-                    .padding(40.dp, bottom = 65.dp, end = 20.dp)
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
-            }
+        FloatingActionButton(
+            onClick = { /* Your add customer logic */ },
+            containerColor = Color(0xFF007BFF),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+        ) {
+            Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
         }
     }
 }
 
 @Composable
-fun CustomerItem(customer: Customer, onClick: () -> Unit) {
+fun LeadItem(lead: Lead, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
-            .clickable { onClick() },
+            .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         shape = RoundedCornerShape(12.dp)
@@ -215,7 +242,7 @@ fun CustomerItem(customer: Customer, onClick: () -> Unit) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        customer.name.first().toString(),
+                        lead.name.first().toString(),
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
@@ -226,30 +253,18 @@ fun CustomerItem(customer: Customer, onClick: () -> Unit) {
 
                 Column {
                     Text(
-                        customer.name,
+                        lead.name,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
                         color = Color.Black
                     )
-                    Text(customer.lastCall, fontSize = 13.sp, color = Color.Gray)
-                }
-
-                if (customer.isNew) {
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(Color(0xFF007BFF))
-                            .padding(horizontal = 6.dp, vertical = 2.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("New", color = Color.White, fontSize = 11.sp)
-                    }
+                    Text(lead.lastCall, fontSize = 13.sp, color = Color.Gray)
                 }
             }
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun CustomerListScreenPreview() {

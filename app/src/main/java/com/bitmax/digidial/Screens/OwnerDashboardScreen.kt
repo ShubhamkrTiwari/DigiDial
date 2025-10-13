@@ -63,7 +63,7 @@ fun OwnerDashboardScreen(navController: NavController) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Box {
                     Image(
-                        painter = painterResource(id = R.drawable.rahul),
+                        painter = painterResource(id = R.drawable.ic_avtar),
                         contentDescription = "Profile Picture",
                         modifier = Modifier
                             .size(100.dp)

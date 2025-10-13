@@ -24,4 +24,5 @@ object ApiClient {
         .build()
 
     val authApi: AuthApiService = retrofit.create(AuthApiService::class.java)
+    val leadApi: LeadApiService = retrofit.create(LeadApiService::class.java)
 }

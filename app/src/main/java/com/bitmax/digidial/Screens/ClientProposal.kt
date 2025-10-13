@@ -144,7 +144,11 @@ fun ClientProposalScreen(navController: NavController) {
                         onValueChange = { clientName = it },
                         label = { Text("Client Name") },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedLabelColor = Color(0xFF2196F3),
+                            unfocusedLabelColor = Color.DarkGray
+                        )
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedTextField(
@@ -152,7 +156,11 @@ fun ClientProposalScreen(navController: NavController) {
                         onValueChange = { proposalTitle = it },
                         label = { Text("Proposal Title") },
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedLabelColor = Color(0xFF2196F3),
+                            unfocusedLabelColor = Color.DarkGray
+                        )
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedTextField(
@@ -162,7 +170,11 @@ fun ClientProposalScreen(navController: NavController) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp),
-                        maxLines = 10
+                        maxLines = 10,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedLabelColor = Color(0xFF2196F3),
+                            unfocusedLabelColor = Color.DarkGray
+                        )
                     )
                 }
             }
