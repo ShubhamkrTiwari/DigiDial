@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.bitmax.digidial.Navigation.Route
 import com.bitmax.digidial.network.ForgetPasswordRequest
 import com.bitmax.digidial.network.VerifyOtpRequest
 import com.bitmax.digidial.network.ApiClient
@@ -123,9 +124,7 @@ fun OTPVerificationScreen(navController: NavController, phoneNumber: String) {
 
                                 delay(2000)
 
-                                Log.d("OTPVerification", "Navigating to homeScreen now")
-
-                                navController.navigate("homeScreen") {
+                                navController.navigate("homeScreen/$phoneNumber") {
                                     popUpTo(0) { inclusive = true }
                                     launchSingleTop = true
                                 }
