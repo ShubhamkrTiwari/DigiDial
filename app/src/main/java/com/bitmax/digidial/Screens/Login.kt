@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import com.bitmax.digidial.R
 import com.bitmax.digidial.viewmodel.AuthViewModel
 import com.bitmax.digidial.viewmodel.OtpUiState
+import com.google.firebase.appdistribution.gradle.models.LoginCredential
 import kotlinx.coroutines.delay
 
 
@@ -44,8 +45,10 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
         if (otpState is OtpUiState.Success) {
             delay(1500) // 1.5 sec delay for showing "Redirecting..."
             val cleanNumber = mobileNumber.trim()
-            navController.navigate("otpverification/$cleanNumber") {
-                popUpTo("login_screen") { inclusive = true }
+            navController.navigate("otpverification/$cleanNumber"){
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
                 launchSingleTop = true
             }
         }
@@ -112,7 +115,7 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White,
                 focusedIndicatorColor = Color(0xFF2B9EFF),
-                unfocusedIndicatorColor = Color.LightGray
+                unfocusedIndicatorColor = Color.Black
             )
         )
 
@@ -193,4 +196,9 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
             modifier = Modifier.padding(bottom = 24.dp)
         )
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun LoginPreview() {
+    Login(navController = rememberNavController())
 }
