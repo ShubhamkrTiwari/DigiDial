@@ -1,26 +1,33 @@
 package com.bitmax.digidial.network
 
-import java.io.IOException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+
+suspend fun <T : Any> safeApiCall(apiCall: suspend () -> T): NetworkResult<T> {
+    return withContext(Dispatchers.IO) {
+        try {
+            NetworkResult.Success(apiCall.invoke())
+        } catch (throwable: Throwable) {
+            when (throwable) {
+                is HttpException -> {
+                    NetworkResult.Error(throwable.code(), throwable.response()?.errorBody()?.string())
+                }
+                else -> {
+                    NetworkResult.Exception(throwable)
+                }
+            }
+        }
+    }
+}
 
 class AuthRepository(private val api: AuthApiService) {
 
-    /**
-     * Sends an OTP request.
-     * @return The parsed [OtpResponse] on success.
-     * @throws IOException on network failure or if the API returns an error.
-     */
-    suspend fun sendOtp(mobile: String): OtpResponse {
-        val request = SendOtpRequest(mobile = mobile)
-        return api.sendOtp(request)
+    suspend fun sendOtp(mobile: String): NetworkResult<OtpResponse> {
+        return safeApiCall { api.sendOtp(SendOtpRequest(mobile = mobile)) }
     }
 
-    /**
-     * Sends an OTP verification request.
-     * @return The parsed [VerifyOtpResponse] on success.
-     * @throws IOException on network failure or if the API returns an error.
-     */
-    suspend fun verifyOtp(mobile: String, otp_code: String): VerifyOtpResponse {
-        val request = VerifyOtpRequest(mobile = mobile, otp_code = otp_code)
-        return api.verifyOtp(request)
+    suspend fun verifyOtp(mobile: String, otp_code: String): NetworkResult<VerifyOtpResponse> {
+        return safeApiCall { api.verifyOtp(VerifyOtpRequest(mobile = mobile, otp_code = otp_code)) }
     }
 }
