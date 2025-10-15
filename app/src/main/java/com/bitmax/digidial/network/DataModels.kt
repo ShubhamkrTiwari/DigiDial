@@ -14,13 +14,6 @@ data class OtpResponse(
     val message: String
 )
 
-data class VerifyOtpRequest(
-    @SerializedName("mobile")
-    val mobile: String,
-    @SerializedName("otp_code")
-    val otp: String
-)
-
 
 
 data class UserData(

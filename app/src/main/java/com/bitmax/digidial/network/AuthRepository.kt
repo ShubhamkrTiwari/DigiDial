@@ -12,7 +12,7 @@ class AuthRepository(private val api: AuthApiService) {
      * @throws IOException on network failure or if the API returns an error.
      */
     suspend fun sendOtp(mobile: String): OtpResponse {
-        val request = ForgetPasswordRequest(mobile)
+        val request = SendOtpRequest(mobile = mobile)
         try {
             val response = api.sendOtp(request)
             if (response.isSuccessful) {

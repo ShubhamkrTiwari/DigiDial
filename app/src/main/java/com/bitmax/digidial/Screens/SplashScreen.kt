@@ -1,4 +1,4 @@
-package com.bitmax.digidial.Screens
+package com.bitmax.digidial.screens
 
 import androidx.annotation.RawRes
 import androidx.compose.foundation.Image
@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.lottie.compose.*
 import com.bitmax.digidial.R
-import com.bitmax.digidial.Navigation.Route
+import com.bitmax.digidial.navigation.Route
 import kotlinx.coroutines.delay
 
 @Composable

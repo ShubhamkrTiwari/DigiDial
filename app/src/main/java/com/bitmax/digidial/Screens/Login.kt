@@ -1,4 +1,4 @@
-package com.bitmax.digidial.Screens
+package com.bitmax.digidial.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -31,7 +31,6 @@ import androidx.navigation.compose.rememberNavController
 import com.bitmax.digidial.R
 import com.bitmax.digidial.viewmodel.AuthViewModel
 import com.bitmax.digidial.viewmodel.OtpUiState
-import com.google.firebase.appdistribution.gradle.models.LoginCredential
 import kotlinx.coroutines.delay
 
 
@@ -40,7 +39,6 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
     var mobileNumber by rememberSaveable { mutableStateOf("") }
     val otpState by viewModel.otpState.collectAsState()
 
-    // ✅ This will automatically trigger when OTP is sent successfully
     LaunchedEffect(otpState) {
         if (otpState is OtpUiState.Success) {
             delay(1500) // 1.5 sec delay for showing "Redirecting..."
@@ -108,7 +106,7 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
                 keyboardType = KeyboardType.Phone,
                 imeAction = ImeAction.Done
             ),
-            leadingIcon = { Text(text = "+91", fontWeight = FontWeight.Bold, color = Color.Gray) },
+            leadingIcon = { Text(text = "+91 ", fontWeight = FontWeight.Bold, color = Color.Gray) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.colors(
@@ -157,7 +155,6 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ✅ Show state messages
         when (otpState) {
             is OtpUiState.Loading -> {
                 CircularProgressIndicator()
@@ -197,6 +194,7 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
