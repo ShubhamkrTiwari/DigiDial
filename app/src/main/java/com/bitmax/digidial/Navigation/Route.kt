@@ -4,7 +4,7 @@ sealed class Route(val route: String) {
     object Splash : Route("Splash")
     object Login : Route("login")
     object EditProfile : Route("editprofile")
-    object HomeScreen : Route("homeScreen/{phoneNumber}")
+    object HomeScreen : Route("homeScreen")
     object Call : Route("call")
     object CallRecording : Route("callrecording")
     object Recording : Route("recording")

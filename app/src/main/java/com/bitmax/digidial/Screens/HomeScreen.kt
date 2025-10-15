@@ -10,7 +10,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Assessment
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.InsertDriveFile
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.NoteAdd
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Business
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
@@ -25,14 +39,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.bitmax.digidial.navigation.Route
+import com.bitmax.digidial.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, phoneNumber: String) {
+fun HomeScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
     val scrollState = rememberScrollState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -105,7 +121,7 @@ fun HomeScreen(navController: NavController, phoneNumber: String) {
                 // Pass a lambda to open the drawer
                 TrialAccountSection(
                     navController = navController,
-                    phoneNumber = phoneNumber,
+                    authViewModel = authViewModel,
                     onMenuClick = {
                         scope.launch {
                             drawerState.apply {
@@ -348,7 +364,7 @@ fun SystemHealthItem(label: String, progress: Float) {
             Text("${(progress * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)
         }
         LinearProgressIndicator(
-            progress = progress,
+            progress = { progress },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp)
@@ -431,7 +447,9 @@ fun SuggestionCard(name: String, company: String, onCall: () -> Unit) {
 }
 
 @Composable
-fun TrialAccountSection(navController: NavController, phoneNumber: String, onMenuClick: () -> Unit) {
+fun TrialAccountSection(navController: NavController, authViewModel: AuthViewModel, onMenuClick: () -> Unit) {
+    val phoneNumber by authViewModel.phoneNumber.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()

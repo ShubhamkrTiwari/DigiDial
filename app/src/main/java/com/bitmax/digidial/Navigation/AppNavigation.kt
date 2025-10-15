@@ -1,6 +1,7 @@
 package com.bitmax.digidial.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,13 +39,7 @@ fun AppNavigation() {
         composable(Route.Splash.route) { SplashScreen(navController) }
         composable(Route.Login.route) { Login(navController) }
         composable(Route.EditProfile.route) { EditProfileScreen(navController) }
-        composable(
-            route = Route.HomeScreen.route,
-            arguments = listOf(navArgument("phoneNumber") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val phoneNumber = backStackEntry.arguments?.getString("phoneNumber") ?: ""
-            HomeScreen(navController, phoneNumber)
-        }
+        composable(Route.HomeScreen.route) { HomeScreen(navController, viewModel()) }
         composable(Route.Call.route) { CallScreenUI(navController) }
         composable(Route.CallRecording.route) { CallRecordingsScreen(navController) }
         composable(Route.Recording.route) { RecordingScreen(navController) }
