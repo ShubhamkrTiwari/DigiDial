@@ -2,7 +2,7 @@ package com.bitmax.digidial.navigation
 
 sealed class Route(val route: String) {
     object Splash : Route("Splash")
-    object Login : Route("login")
+    object Login : Route("login/{userType}")
     object EditProfile : Route("editprofile")
     object HomeScreen : Route("homeScreen")
     object Call : Route("call")

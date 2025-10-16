@@ -17,7 +17,7 @@ import com.bitmax.digidial.screens.EditProfileScreen
 import com.bitmax.digidial.screens.GrantPermissionScreen
 import com.bitmax.digidial.screens.HelpAndSupportScreen
 import com.bitmax.digidial.screens.HomeScreen
-import com.bitmax.digidial.screens.Login
+import com.bitmax.digidial.screens.LoginScreen
 import com.bitmax.digidial.screens.MeetingNotesScreen
 import com.bitmax.digidial.screens.MyProfileScreen
 import com.bitmax.digidial.screens.NewNoteScreen
@@ -37,9 +37,15 @@ fun AppNavigation() {
         startDestination = Route.Splash.route
     ) {
         composable(Route.Splash.route) { SplashScreen(navController) }
-        composable(Route.Login.route) { Login(navController) }
+        composable(
+            route = Route.Login.route,
+            arguments = listOf(navArgument("userType") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val userType = backStackEntry.arguments?.getString("userType") ?: ""
+            LoginScreen(navController = navController, userType = userType)
+        }
         composable(Route.EditProfile.route) { EditProfileScreen(navController) }
-        composable(Route.HomeScreen.route) { HomeScreen(navController, viewModel()) }
+        composable(Route.HomeScreen.route) { HomeScreen(navController) }
         composable(Route.Call.route) { CallScreenUI(navController) }
         composable(Route.CallRecording.route) { CallRecordingsScreen(navController) }
         composable(Route.Recording.route) { RecordingScreen(navController) }
@@ -50,7 +56,7 @@ fun AppNavigation() {
         composable(Route.MeetingNotes.route) { MeetingNotesScreen(navController) }
         composable(Route.Reports.route) { ReportsScreen(navController) }
         composable(Route.ClientProposal.route) { ClientProposalScreen(navController) }
-        composable(Route.SwitchAccount.route) { SwitchAccountScreen(navController)}
+        composable(Route.SwitchAccount.route) { SwitchAccountScreen(navController = navController)}
         composable(Route.AgentDashboard.route) { AgentDashboardScreen(navController) }
         composable(Route.ViewPlan.route) { ViewPlanScreen(navController) }
         composable(Route.AddTeamMembers.route) { AddTeamMembersScreen(navController) }

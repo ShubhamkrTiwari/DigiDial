@@ -54,7 +54,7 @@ import kotlinx.coroutines.delay
 
 
 @Composable
-fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) {
+fun LoginScreen(navController: NavController, userType: String, viewModel: AuthViewModel = viewModel()) {
     var mobileNumber by rememberSaveable { mutableStateOf("") }
     val otpState by viewModel.otpState.collectAsState()
 
@@ -95,7 +95,7 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Log in to your account",
+            text = "Log in as $userType",
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF1D2D44),
@@ -182,7 +182,7 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
             is OtpUiState.Success -> {
                 val response = (otpState as OtpUiState.Success).response
                 Text(
-                    text = "✅ ${'$'}{response.message} Redirecting to verification...",
+                    text = "✅ ${response.message} Redirecting to verification...",
                     color = Color(0xFF00C853),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -207,7 +207,7 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
                     }
                 } else {
                     Text(
-                        text = "❌ ${'$'}{errorState.message}",
+                        text = "❌ ${errorState.message}",
                         color = Color.Red,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold
@@ -232,5 +232,5 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
-    Login(navController = rememberNavController())
+    LoginScreen(navController = rememberNavController(), userType = "Owner")
 }
