@@ -1,4 +1,4 @@
-package com.bitmax.digidial.Screens
+package com.bitmax.digidial.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -91,7 +92,7 @@ fun OutgoingCallScreen(customer: Customer) {
     // 🔹 Controls
     val controls = listOf(
         ControlItem(icon = Icons.Default.Mic, label = "Mute"),
-        ControlItem(icon = Icons.Default.VolumeUp, label = "Speaker"),
+        ControlItem(icon = Icons.AutoMirrored.Filled.VolumeUp, label = "Speaker"),
         ControlItem(icon = Icons.Default.Pause, label = "Hold"),
         ControlItem(icon = Icons.Default.PersonAdd, label = "Add")
     )
@@ -289,7 +290,9 @@ fun PreviewOutgoingCallScreen() {
             name = "Olivia Chen",
             company = "Tech Solutions Inc.",
             profileImage = R.drawable.ic_avtar,
-            currentCallDuration = "00:05:43"
+            currentCallDuration = "00:05:43",
+            phone = "123-456-7890",
+            lastCall = "2024-07-30"
         )
     )
 }

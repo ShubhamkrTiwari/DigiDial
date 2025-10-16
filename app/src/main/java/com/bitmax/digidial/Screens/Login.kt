@@ -1,16 +1,34 @@
-package com.bitmax.digidial.Screens
+package com.bitmax.digidial.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,23 +47,22 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bitmax.digidial.R
+import com.bitmax.digidial.navigation.Route
 import com.bitmax.digidial.viewmodel.AuthViewModel
 import com.bitmax.digidial.viewmodel.OtpUiState
-import com.google.firebase.appdistribution.gradle.models.LoginCredential
 import kotlinx.coroutines.delay
 
 
 @Composable
-fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) {
+fun LoginScreen(navController: NavController, userType: String, viewModel: AuthViewModel = viewModel()) {
     var mobileNumber by rememberSaveable { mutableStateOf("") }
     val otpState by viewModel.otpState.collectAsState()
 
-    // ✅ This will automatically trigger when OTP is sent successfully
     LaunchedEffect(otpState) {
         if (otpState is OtpUiState.Success) {
             delay(1500) // 1.5 sec delay for showing "Redirecting..."
             val cleanNumber = mobileNumber.trim()
-            navController.navigate("otpverification/$cleanNumber"){
+            navController.navigate(Route.OtpVerification.route.replace("{phoneNumber}", cleanNumber)){
                 popUpTo(navController.graph.startDestinationId) {
                     inclusive = true
                 }
@@ -78,7 +95,7 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Log in to your account",
+            text = "Log in as $userType",
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF1D2D44),
@@ -108,7 +125,7 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
                 keyboardType = KeyboardType.Phone,
                 imeAction = ImeAction.Done
             ),
-            leadingIcon = { Text(text = "+91", fontWeight = FontWeight.Bold, color = Color.Gray) },
+            leadingIcon = { Text(text = "+91 ", fontWeight = FontWeight.Bold, color = Color.Gray) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.colors(
@@ -157,7 +174,6 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ✅ Show state messages
         when (otpState) {
             is OtpUiState.Loading -> {
                 CircularProgressIndicator()
@@ -166,7 +182,7 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
             is OtpUiState.Success -> {
                 val response = (otpState as OtpUiState.Success).response
                 Text(
-                    text = "✅ ${response.message}\nRedirecting to verification...",
+                    text = "✅ ${response.message} Redirecting to verification...",
                     color = Color(0xFF00C853),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -175,13 +191,28 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
             }
 
             is OtpUiState.Error -> {
-                val msg = (otpState as OtpUiState.Error).message
-                Text(
-                    text = "❌ $msg",
-                    color = Color.Red,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                val errorState = otpState as OtpUiState.Error
+                if (errorState.message.contains("User not found", ignoreCase = true)) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "User not registered. Please sign up.",
+                            color = Color.Red,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Button(onClick = { /* TODO: Navigate to Registration Screen */ }) {
+                            Text("Sign Up")
+                        }
+                    }
+                } else {
+                    Text(
+                        text = "❌ ${errorState.message}",
+                        color = Color.Red,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
 
             else -> {}
@@ -197,8 +228,9 @@ fun Login(navController: NavController, viewModel: AuthViewModel = viewModel()) 
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
-    Login(navController = rememberNavController())
+    LoginScreen(navController = rememberNavController(), userType = "Owner")
 }
