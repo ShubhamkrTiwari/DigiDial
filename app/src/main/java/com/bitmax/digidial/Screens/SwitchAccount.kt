@@ -1,4 +1,4 @@
-package com.bitmax.digidial.Screens
+package com.bitmax.digidial.screens
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.bitmax.digidial.Navigation.Route
 import com.bitmax.digidial.R
 
 @Preview(showBackground = true)
@@ -90,7 +89,8 @@ fun SwitchAccountScreen(
                 )
 
                 Text(
-                    text = "Empowering Businesses with Smart Digital Solutions",
+                    text = "Empowering Businesses" +
+                            " with Smart Digital Solutions",
                     fontSize = 14.sp,
                     color = Color(0xFF0277BD),
                     textAlign = TextAlign.Center,
@@ -121,7 +121,7 @@ fun SwitchAccountScreen(
                         isSelected = selectedRole == "Owner",
                         onClick = {
                             selectedRole = "Owner"
-                            navController.navigate(Route.Login.route)
+                            navController.navigate("login/Owner")
                         },
                         lightBlue = lightBlue
                     )
@@ -132,7 +132,7 @@ fun SwitchAccountScreen(
                         isSelected = selectedRole == "Agent",
                         onClick = {
                             selectedRole = "Agent"
-                            navController.navigate(Route.GrantPermission.route)
+                            navController.navigate("login/Agent")
                         },
                         lightBlue = lightBlue
                     )

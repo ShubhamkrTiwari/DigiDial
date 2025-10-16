@@ -1,4 +1,4 @@
-package com.bitmax.digidial.Screens
+package com.bitmax.digidial.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.bitmax.digidial.Screens.ui.theme.DigiDialTheme
+
 
 class ViewPlan : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -234,4 +234,9 @@ fun ViewPlanScreenPreview() {
     DigiDialTheme {
         ViewPlanScreen(navController = rememberNavController())
     }
+}
+
+@Composable
+fun DigiDialTheme(content: @Composable () -> Unit) {
+    TODO("Not yet implemented")
 }
