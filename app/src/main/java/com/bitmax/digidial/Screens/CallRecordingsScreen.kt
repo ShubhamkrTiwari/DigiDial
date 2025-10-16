@@ -1,4 +1,4 @@
-package com.bitmax.digidial.screens
+package com.bitmax.digidial.Screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+
 
 // Colors
 private val SurfaceWhite = Color(0xFFFFFFFF)

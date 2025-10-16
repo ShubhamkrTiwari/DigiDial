@@ -1,4 +1,4 @@
-package com.bitmax.digidial.screens
+package com.bitmax.digidial.Screens
 
 import android.Manifest
 import android.content.Context
@@ -77,7 +77,7 @@ fun GrantPermissionScreen(navController: NavController) {
         val overlayGranted = Settings.canDrawOverlays(context)
 
         if (allStandardGranted && overlayGranted) {
-            navController.navigate(Route.Login.route) {
+            navController.navigate(Route.SwitchAccount.route) {
                 popUpTo(navController.graph.startDestinationId) {
                     inclusive = true
                 }

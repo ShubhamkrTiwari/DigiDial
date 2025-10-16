@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -15,7 +22,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-        android:name=".App"
+       
         android:supportsRtl="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -25,26 +32,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.DigiDial"
         tools:targetApi="31">
-        <activity
-            android:name=".Screens.ClientProposal"
-            android:exported="false"
-            android:label="@string/title_activity_client_proposal"
-            android:theme="@style/Theme.DigiDial" />
-        <activity
-            android:name=".Screens.Reports"
-            android:exported="false"
-            android:label="@string/title_activity_reports"
-            android:theme="@style/Theme.DigiDial" />
-        <activity
-            android:name=".Screens.MeetingNotes"
-            android:exported="false"
-            android:label="@string/title_activity_meeting_notes"
-            android:theme="@style/Theme.DigiDial" />
-        <activity
-            android:name=".Screens.ViewPlan"
-            android:exported="false"
-            android:label="@string/title_activity_view_plan"
-            android:theme="@style/Theme.DigiDial" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

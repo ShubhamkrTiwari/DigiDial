@@ -1,5 +1,6 @@
-package com.bitmax.digidial.screens
+package com.bitmax.digidial.Screens
 
+import android.content.Context
 import androidx.annotation.RawRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -26,11 +28,22 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
+    val context = LocalContext.current
 
-    // ⏳ Navigate to SwitchAccountScreen after 3 seconds
+    // ⏳ Navigate after checking login status
     LaunchedEffect(Unit) {
         delay(3000)
-        navController.navigate("switch_account")
+        val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
+        if (isLoggedIn) {
+            navController.navigate(Route.HomeScreen.route) {
+                popUpTo(Route.Splash.route) { inclusive = true }
+            }
+        } else {
+            navController.navigate("switch_account") {
+                popUpTo(Route.Splash.route) { inclusive = true }
+            }
+        }
     }
 
 

@@ -1,4 +1,4 @@
-package com.bitmax.digidial.screens
+package com.bitmax.digidial.Screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

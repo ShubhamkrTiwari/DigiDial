@@ -1,4 +1,4 @@
-package com.bitmax.digidial.screens
+package com.bitmax.digidial.Screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

@@ -6,8 +6,8 @@ import android.media.AudioTrack
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.bitmax.digidial.screens.RecordingScreen
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -117,4 +117,9 @@ class AudioPlayer(private val sampleRate: Int = 8000) { // Changed to 8kHz for T
 @Composable
 fun AudioPlayerPreview() {
     RecordingScreen(navController = rememberNavController())
+}
+
+@Composable
+fun RecordingScreen(navController: NavHostController) {
+    TODO("Not yet implemented")
 }
