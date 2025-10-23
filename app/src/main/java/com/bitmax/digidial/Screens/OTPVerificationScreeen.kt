@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.bitmax.digidial.navigation.Route
+import com.bitmax.digidial.Navigation.Route
 import com.bitmax.digidial.viewmodel.AuthViewModel
 import com.bitmax.digidial.viewmodel.OtpUiState
 import com.bitmax.digidial.viewmodel.VerifyOtpUiState

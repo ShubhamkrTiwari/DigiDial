@@ -1,7 +1,6 @@
 package com.bitmax.digidial.Screens
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -44,8 +43,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.bitmax.digidial.Navigation.Route
 import com.bitmax.digidial.R
-import com.bitmax.digidial.navigation.Route
 
 @Composable
 fun GrantPermissionScreen(navController: NavController) {

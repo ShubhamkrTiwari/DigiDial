@@ -1,6 +1,5 @@
 package com.bitmax.digidial.Screens
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,56 +13,21 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.bitmax.digidial.ViewModel.HomeScreenViewModel
 import kotlinx.coroutines.launch
-import java.util.UUID
-
-// Data class for a single team member
-data class TeamMember(
-    val id: String = UUID.randomUUID().toString(),
-    var name: String,
-    var number: String
-)
-
-// Repository for managing team members using SharedPreferences
-class TeamMemberRepository(private val context: Context) {
-    private val sharedPreferences = context.getSharedPreferences("team_members_prefs", Context.MODE_PRIVATE)
-    private val gson = Gson()
-    private val membersKey = "team_members_list"
-
-    fun saveMembers(members: List<TeamMember>) {
-        val json = gson.toJson(members)
-        sharedPreferences.edit().putString(membersKey, json).apply()
-    }
-
-    fun loadMembers(): MutableList<TeamMember> {
-        val json = sharedPreferences.getString(membersKey, null)
-        return if (json != null) {
-            val type = object : TypeToken<MutableList<TeamMember>>() {}.type
-            gson.fromJson(json, type)
-        } else {
-            mutableListOf()
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTeamMembersScreen(navController: NavController) {
-    val context = LocalContext.current
-    val memberRepository = remember { TeamMemberRepository(context) }
-
+fun AddTeamMembersScreen(navController: NavController, viewModel: HomeScreenViewModel) {
     var name by rememberSaveable { mutableStateOf("") }
     var number by rememberSaveable { mutableStateOf("") }
-    
+
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -89,11 +53,7 @@ fun AddTeamMembersScreen(navController: NavController) {
             FloatingActionButton(
                 onClick = {
                     if (name.isNotBlank() && number.isNotBlank()) {
-                        val members = memberRepository.loadMembers()
-                        val newMember = TeamMember(name = name, number = number)
-                        members.add(newMember)
-                        memberRepository.saveMembers(members)
-                        
+                        viewModel.addTeamMember(name, number)
                         scope.launch {
                             snackbarHostState.showSnackbar("Member saved successfully!")
                         }
@@ -141,7 +101,7 @@ fun AddTeamMembersScreen(navController: NavController) {
                     OutlinedTextField(
                         value = number,
                         onValueChange = { number = it },
-                        label = { Text("Member Number") },
+                        label = { Text(" Number") },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
@@ -155,5 +115,5 @@ fun AddTeamMembersScreen(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun AddTeamMembersScreenPreview() {
-    AddTeamMembersScreen(navController = rememberNavController())
+    AddTeamMembersScreen(navController = rememberNavController(), viewModel = HomeScreenViewModel())
 }

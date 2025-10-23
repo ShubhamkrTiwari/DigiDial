@@ -139,8 +139,22 @@ fun SwitchAccountScreen(
                 }
             }
 
-            // 🔹 Optional Bottom Padding for better look
-            Spacer(modifier = Modifier.height(20.dp))
+            // 🔹 Powered by section
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Powered by",
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.bitmaxtecnologylogo),
+                    contentDescription = "Bitmax Logo",
+                    modifier = Modifier.height(20.dp)
+                )
+            }
         }
     }
 }

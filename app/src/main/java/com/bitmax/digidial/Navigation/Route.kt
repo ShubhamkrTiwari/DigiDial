@@ -1,4 +1,4 @@
-package com.bitmax.digidial.navigation
+package com.bitmax.digidial.Navigation
 
 sealed class Route(val route: String) {
     object Splash : Route("Splash")

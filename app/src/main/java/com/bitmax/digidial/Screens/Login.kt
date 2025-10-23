@@ -46,8 +46,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.bitmax.digidial.Navigation.Route
 import com.bitmax.digidial.R
-import com.bitmax.digidial.navigation.Route
 import com.bitmax.digidial.viewmodel.AuthViewModel
 import com.bitmax.digidial.viewmodel.OtpUiState
 import kotlinx.coroutines.delay
@@ -220,12 +220,22 @@ fun LoginScreen(navController: NavController, userType: String, viewModel: AuthV
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Text(
-            text = "Powered by Bitmax🩵",
-            fontSize = 14.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
+        Row(
+            modifier = Modifier.padding(bottom = 24.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Powered by",
+                fontSize = 14.sp,
+                color = Color.Gray,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Image(
+                painter = painterResource(id = R.drawable.bitmaxtecnologylogo),
+                contentDescription = "Bitmax Logo",
+                modifier = Modifier.height(20.dp)
+            )
+        }
     }
 }
 

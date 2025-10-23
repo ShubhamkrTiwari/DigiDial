@@ -1,6 +1,4 @@
-package com.bitmax.digidial.Screens
-
-import android.content.Context
+package com.bitmax.digidial.screens
 import androidx.annotation.RawRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,26 +20,17 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.airbnb.lottie.compose.*
 import com.bitmax.digidial.R
-import com.bitmax.digidial.navigation.Route
+import com.bitmax.digidial.Navigation.Route
 import kotlinx.coroutines.delay
+
 
 @Composable
 fun SplashScreen(navController: NavController) {
-    val context = LocalContext.current
-
-    // ⏳ Navigate after checking login status
+    // ⏳ Navigate after a delay
     LaunchedEffect(Unit) {
-        delay(3000)
-        val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
-        if (isLoggedIn) {
-            navController.navigate(Route.HomeScreen.route) {
-                popUpTo(Route.Splash.route) { inclusive = true }
-            }
-        } else {
-            navController.navigate("switch_account") {
-                popUpTo(Route.Splash.route) { inclusive = true }
-            }
+        delay(3000) // Delay for 3 seconds
+        navController.navigate(Route.HomeScreen.route) {
+            popUpTo(Route.Splash.route) { inclusive = true }
         }
     }
 
@@ -81,7 +69,7 @@ fun SplashScreen(navController: NavController) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Manage calls, CRM, and teams with ease",
+            text = "Manage calls, CRM, and teams with Ease",
             color = Color.White.copy(alpha = 0.8f),
             fontSize = 16.sp,
             textAlign = TextAlign.Center
